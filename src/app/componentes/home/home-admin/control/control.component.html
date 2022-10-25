@@ -1,0 +1,29 @@
+<h3>Listado de especialistas</h3>
+
+<table *ngIf="especialistas.length;else noHayDatos" class="table w-50">
+    <thead>
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Especialidad</th>
+            <th scope="col">Habilitado</th>
+            <th scope="col">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let especialista of especialistas">
+            <td><strong>{{ especialista.nombre }}</strong></td>
+            <td><strong>{{ especialista.apellido }}</strong></td>
+            <td><strong>{{ especialista.especialidad }}</strong></td>
+            <td><strong>{{ especialista.habilitado }}</strong></td>
+            <td *ngIf="!especialista.habilitado"><button class="btn btn-danger"
+                    (click)="cambiarEstado(especialista)">Habilitar</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #noHayDatos>
+    <strong>No hay datos para mostrar.</strong>
+</ng-template>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

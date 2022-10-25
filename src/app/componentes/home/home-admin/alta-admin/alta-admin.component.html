@@ -1,0 +1,83 @@
+<h4 class="mb-2">Registro de administradores.</h4>
+
+<div class="row-md-9">
+    <form class="row g-3" [formGroup]="formulario" (ngSubmit)="enviar()">
+        <div class="col-md-5">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" formControlName="nombre">
+            <small class="invalid text-danger" *ngIf="formulario.controls['nombre'].errors?.['required'] &&
+          formulario.controls['nombre'].touched">
+                El nombre es requerido
+            </small>
+        </div>
+        <div class="col-md-5">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="apellido" formControlName="apellido">
+            <small class="invalid text-danger" *ngIf="formulario.controls['apellido'].errors?.['required'] &&
+          formulario.controls['apellido'].touched">
+                El apellido es requerido
+            </small>
+        </div>
+        <div class="col-md-5">
+            <label for="edad" class="form-label">Edad</label>
+            <input type="number" class="form-control" id="edad" formControlName="edad">
+            <small class="invalid text-danger" *ngIf="formulario.controls['edad'].errors?.['required'] &&
+            formulario.controls['edad'].touched">
+                La edad es requerida
+            </small>
+            <small class="invalid text-danger" *ngIf="(formulario.controls['edad'].errors?.['min'] || 
+            formulario.controls['edad'].errors?.['max']) &&
+            formulario.controls['edad'].touched">
+                La edad debe ser de 18 a 99 años
+            </small>
+        </div>
+        <div class="col-md-5">
+            <label for="dni" class="form-label">Dni</label>
+            <input type="text" class="form-control" id="dni" formControlName="dni">
+            <small class="invalid text-danger" *ngIf="formulario.controls['dni'].errors?.['required'] &&
+          formulario.controls['dni'].touched">
+                El dni es requerido.
+            </small>
+            <small class="invalid text-danger" *ngIf="(formulario.controls['dni'].hasError('minlength') || formulario.controls['dni'].hasError('maxlength')) && formulario.controls['dni'].touched">
+                El dni solo puede tener 8 dígitos
+            </small>
+            <small class="invalid text-danger" *ngIf="formulario.controls['dni'].errors?.['pattern'] &&
+          formulario.controls['dni'].touched">
+                Solo puede ingresar números
+            </small>
+        </div>
+        <div class="col-md-5">
+            <label for="email" class="form-label">Mail</label>
+            <input type="email" class="form-control" id="email" formControlName="mail">
+            <small class="invalid text-danger" *ngIf="formulario.controls['mail'].errors?.['required'] &&
+          formulario.controls['mail'].touched">
+                El mail es requerido.
+            </small>
+            <small class="invalid text-danger" *ngIf="formulario.controls['mail'].errors?.['email'] && formulario.controls['mail'].touched">
+                El mail no tiene un formato válido.
+            </small>
+        </div>
+        <div class="col-md-5">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" formControlName="password">
+            <small class="invalid text-danger" *ngIf="formulario.controls['password'].errors?.['required'] &&
+          formulario.controls['password'].touched">
+                El password es requerido.
+            </small>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="imagenUno" class="form-label">Suba una imagen de perfil</label>
+            <input class="form-control" type="file" accept=".png, .jpg" id="imagenUno" formControlName="imagenUno" (change)="uploadImagen($event)">
+            <small class="invalid text-danger" *ngIf="formulario.controls['imagenUno'].errors?.['required'] &&
+          formulario.controls['imagenUno'].touched">
+                Debe subir una imagen.
+            </small>
+          </div>
+
+        <div class="col-12">
+            <button [disabled]="formulario.invalid" type="submit" class="btn btn-success btn-lg" id="btn-encuesta">Enviar</button>
+        </div>
+    </form>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

@@ -1,0 +1,11 @@
+<nav class=" navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand"><button class="openbtn" (click)="openNav()">&#9776;</button></a>
+    <div class="d-flex">
+      <strong class="me-2 text-white">{{ usuario?.email }}</strong>
+      <button class="btn btn-outline-danger" type="submit" (click)="logout()">Salir</button>
+    </div>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>
