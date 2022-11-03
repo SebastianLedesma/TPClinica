@@ -12,10 +12,10 @@ import { SpinnerService } from '../../services/spinner.service';
 export class LoginPageComponent implements OnInit {
 
   usuarios:any[]=[
-    {mail:'sebastianledesma1992@gmail.com',password:'123456'},
+    {mail:'nuhlockdjizgxukbqg@tmmwj.net',password:'123456'},
     {mail:'titogomeztplabo@outlook.es', password:'123456'},//esp
     {mail:'lauradiaztplabo@outlook.com', password:'123456'},//esp
-    {mail:'dariogonzaleztplabo@outlook.es', password:'123456'},//esp
+    {mail:'fzfpfybxwqeqnzdwye@tmmbt.com', password:'123456'},//esp
     {mail:'ricardoledesmainfolaboral@gmail.com', password:'123456'},//pac
     {mail:'mariagomeztplabo@outlook.com', password:'123456'},//pac
     {mail:'juanpereztplabo@outlook.com', password:'123456'},//pac
@@ -57,57 +57,50 @@ export class LoginPageComponent implements OnInit {
     if(this.formulario.valid){
 
       this.spinnerService.mostrarSpinner();
-      /*const resp = await this.authService.loginUsuario(mail,password);
-      
-      //VERIFICAR LAS URL
-      if(resp?.user){
-        if(this.usuarioPerfil === 'admin'){
-          this.router.navigate(['home/admin']);
-
-        }else if(resp!.user?.emailVerified){
-
-          if(this.usuarioPerfil === 'paciente'){
-            this.router.navigate(['home/paciente']);
-          }else{
-            this.router.navigate(['home/especialista']);
-          }
-
-        }else{
-          this.mensaje='Verifique su mail en su casilla de correo.'
-        }
-        
-      }else{
-        this.mensaje = 'No hay registros con estos datos.';
-      }
-      
-      this.spinnerService.ocultarSpinner();*/
 
       this.authService.loginUsuario(mail,password)
       .then( resp =>{
         if(resp.user){
-          if(this.usuarioPerfil === 'admin'){
-            this.router.navigate(['home/admin']);
+          // if(this.usuarioPerfil === 'admin'){
+          //   this.router.navigate(['home/admin']);
   
-          }else if(resp!.user?.emailVerified){
+          // }else if(resp!.user?.emailVerified){
   
+          //   if(this.usuarioPerfil === 'paciente'){
+          //     this.router.navigate(['home/paciente']);
+             
+          //   }else{
+          //     this.router.navigate(['home/especialista']);
+          //   }
+  
+          // }else{
+          //   this.router.navigate(['home/mail-no-verificado']);
+          //   this.spinnerService.ocultarSpinner();
+          // }
+          if(resp!.user?.emailVerified){
+            
             if(this.usuarioPerfil === 'paciente'){
               this.router.navigate(['home/paciente']);
               //this.spinnerService.ocultarSpinner();
-            }else{
+             
+            }else if(this.usuarioPerfil === 'especialista'){
               this.router.navigate(['home/especialista']);
+            }else{
+              this.router.navigate(['home/admin']);
+              //this.spinnerService.ocultarSpinner();
             }
-  
+            
           }else{
-            this.mensaje='Verifique su mail en su casilla de correo.'
+            this.router.navigate(['home/mail-no-verificado']);
             this.spinnerService.ocultarSpinner();
           }
-          
+          this.spinnerService.ocultarSpinner();
         }else{
           this.mensaje = 'No hay registros con estos datos.';
           this.spinnerService.ocultarSpinner();
         }
-        //console.log('Ya lo dejé pasar.');
-        this.spinnerService.ocultarSpinner();
+
+        //this.spinnerService.ocultarSpinner();
       })
       .catch( error =>{
         this.mensaje = 'No hay registros con estos datos.';

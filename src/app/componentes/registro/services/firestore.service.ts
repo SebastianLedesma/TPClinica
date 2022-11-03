@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { collection, collectionData, doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Paciente } from '../clases/paciente';
 import { Especialista } from '../clases/especialista.class';
 
 @Injectable({
@@ -22,7 +21,7 @@ export class FirestoreService {
 
   async obtenerDoc(nombreCollection:string, id:string){
     const docRef = doc(this._firestore, nombreCollection, id);
-    const resp =  await getDoc<Especialista>(docRef);
+    const resp =  await getDoc(docRef);
 
     return resp;
   }

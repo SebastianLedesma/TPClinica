@@ -9,10 +9,12 @@ export class SpinnerService {
   constructor(private spinnerService:NgxSpinnerService ) { }
 
   mostrarSpinner(){
+    //console.log('abro')
     this.spinnerService.show();
   }
 
   ocultarSpinner(){
+    //console.log('cierro');
     this.spinnerService.hide();
   }
 }

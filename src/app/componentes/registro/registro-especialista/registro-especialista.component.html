@@ -1,10 +1,38 @@
 <app-nav></app-nav>
 
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Comprueba que eres un humano</h4>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3 text-center">
+            <strong class="mt-5" [ngStyle]="{'color':colorPalabra}">{{ palabraAMostrar }}</strong>
+            <br>
+            <label for="exampleFormControlInput1" class="form-label">¿De qúe color es la palabra?</label>
+            <input type="text" class="form-control" [(ngModel)]="respuesta">
+          </div>
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="closePopup()">
+            Cerrar
+          </button>
+  
+          <button type="button" class="btn btn-secondary" (click)="verificarCaptcha()">
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <div class="container">
     <h4 class="mt-5 mb-2 text-center">Registro de especialistas</h4>
 
     <div class="row row-md-8 w-75 mx-auto">
-        <form class="row g-3" [formGroup]="formulario" (ngSubmit)="enviar()">
+        <form class="row g-3" [formGroup]="formulario" (ngSubmit)="mostrarCaptcha()">
             <div class="col-md-4">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" formControlName="nombre">
@@ -51,24 +79,6 @@
                 </small>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Especialidad</label>
-                <select class="form-select" formControlName="especialidad" (change)="mostrarInput()">
-                    <option selected value="clinico">Clinico</option>
-                    <option value="dermatologia">Dermatologia</option>
-                    <option value="pediatra">Pediatra</option>
-                    <option value="traumatologia">Traumatologia</option>
-                    <option value="otra">Otra especialidad</option>
-                </select>
-            </div>
-            <div *ngIf="eligeOtra" class="col-md-5">
-                <label for="otraEspecialidad" class="form-label">Otra especialidad</label>
-                <input type="text" class="form-control" id="otraEspecialidad" formControlName="otraEspecialidad">
-                <small class="invalid text-danger" *ngIf="formulario.controls['otraEspecialidad'].errors?.['required'] &&
-          formulario.controls['otraEspecialidad'].touched">
-                    La especialidad es requerida.
-                </small>
-            </div>
-            <div class="col-md-4">
                 <label for="email" class="form-label">Mail</label>
                 <input type="email" class="form-control" id="email" formControlName="mail">
                 <small class="invalid text-danger" *ngIf="formulario.controls['mail'].errors?.['required'] &&
@@ -88,6 +98,25 @@
                     El password es requerido.
                 </small>
             </div>
+            <div class="col-md-4">
+                <label class="form-label">Especialidad</label>
+                <select class="form-select" formControlName="especialidadUno">
+                    <option selected value="">Seleccione</option>
+                    <option *ngFor="let especialidad of especialidadesDisponibles" [value]="especialidad">{{especialidad | titlecase}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="segundaEsp" class="form-label">Segunda especialidad(opcional)</label>
+                <select class="form-select" formControlName="segundaEsp">
+                    <option selected value="">Seleccione</option>
+                    <option *ngFor="let especialidad of especialidadesDisponibles" [value]="especialidad">{{especialidad | titlecase}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="terceraEsp" class="form-label">Tercera especialidad(opcional)</label>
+                <input type="text" class="form-control" id="terceraEsp" formControlName="terceraEsp">
+            </div>
+            
             <div class="col-md-8 -mb-3">
                 <label for="imagenUno" class="form-label">Cargue una imagen de perfil</label>
                 <input class="form-control" type="file" accept=".png, .jpg" id="imagenUno" formControlName="imagenUno"

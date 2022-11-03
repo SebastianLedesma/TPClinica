@@ -1,0 +1,111 @@
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Reseña</h4>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Motivo de la cancelación</label>
+          <input type="text" class="form-control" [(ngModel)]="mensajeResenia">
+        </div>
+  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" 
+                (click)="closePopup()">
+          Cerrar
+        </button>
+
+        <button type="button" class="btn btn-danger" 
+                (click)="cancelarTurno()">
+          Enviar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <h4>Ver turnos</h4>
+  
+    <div class="col-md-3 border border-dark mx-2 p-3">
+      <h5>Buscar por:</h5>
+      <button class="btn btn-warning m-2" (click)="mostrarEspecialidades()">Especialidad</button>
+      <button class="btn btn-warning m-2" (click)="mostrarEspecialistas()">Especialista</button>
+    </div>
+  
+    <div *ngIf="divEspecialidades" class="col-md-2 border border-dark mx-2 p-3">
+      <h4>Especialidades</h4>
+      <button *ngFor="let especialidad of arrayFiltroEspecialidad" class="btn btn-warning m-2"
+        (click)="mostrarTurnosPorEspecialidades(especialidad)">{{ especialidad }}</button>
+    </div>
+  
+    <div *ngIf="divEspecialistas" class="col-md-2 border border-dark mx-2 p-3">
+      <h4>Especialistas</h4>
+      <button *ngFor="let especialista of arrayFiltroEspecialistas" class="btn btn-warning m-2"
+        (click)="mostrarTurnosPorEspecialista(especialista)">{{ especialista }}</button>
+    </div>
+  
+    <table *ngIf="mostrarTabla" class="table w-75">
+      <thead>
+        <tr>
+          <th scope="col">Fecha</th>
+          <th scope="col">Especialidad</th>
+          <th scope="col">Especialista</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let turno of turnosDisponiblesAMostrar">
+            <td>{{ turno.fecha | date:'short' }}</td>
+            <td>{{ turno.especialidad }}</td>
+            <td>{{ turno.nombreEspecialista }}</td>
+            <td><strong>Disponible</strong></td>
+            <td><button class="btn btn-danger" (click)="openDivResenia(turno,'turnos_disponibles')">Cancelar</button></td>
+          </tr>
+        <tr *ngFor="let turno of turnosReservadosAMostrar">
+          <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.especialidad }}</td>
+          <td>{{ turno.nombreEspecialista }}</td>
+          <td><strong>Reservado</strong></td>
+          <td><button class="btn btn-danger" (click)="openDivResenia(turno,'turnos_reservados')">Cancelar</button></td>
+        </tr>
+  
+        <tr *ngFor="let turno of turnosAceptadosAMostrar">
+          <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.especialidad }}</td>
+          <td>{{ turno.nombreEspecialista }}</td>
+          <td><strong>Aceptado</strong></td>
+        </tr>
+  
+        <tr *ngFor="let turno of turnosRechazadosAMostrar">
+          <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.especialidad }}</td>
+          <td>{{ turno.nombreEspecialista }}</td>
+          <td><strong>Rechazado</strong></td>
+        </tr>
+  
+        <tr *ngFor="let turno of turnosCanceladosAMostrar">
+          <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.especialidad }}</td>
+          <td>{{ turno.nombreEspecialista }}</td>
+          <td><strong>Cancelado</strong></td>
+        </tr>
+  
+        <tr *ngFor="let turno of turnosFinalizadosAMostrar">
+          <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.especialidad }}</td>
+          <td>{{ turno.nombreEspecialista }}</td>
+          <td><strong>Finalizado</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>

@@ -5,7 +5,7 @@ export class Especialista{
     edad?:number;
     dni?:string;
     mail?:string;
-    especialidad?:string;
+    especialidad?:string[];
     habilitado?:boolean;
     imagenUno?:string;
 }

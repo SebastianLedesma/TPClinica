@@ -39,7 +39,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
   schemas:[ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
-    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
+    // { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
   ],
   bootstrap: [AppComponent]
 })

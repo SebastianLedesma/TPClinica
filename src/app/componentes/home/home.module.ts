@@ -7,7 +7,15 @@ import { HomeEspecialistaComponent } from './home-especialista/home-especialista
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AltaAdminComponent } from './home-admin/alta-admin/alta-admin.component';
 import { ControlComponent } from './home-admin/control/control.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MailNoVerificadoComponent } from './mail-no-verificado/mail-no-verificado.component';
+import { PerfilNoVerificadoComponent } from './perfil-no-verificado/perfil-no-verificado.component';
+import { PerfilComponent } from './perfil/perfil.component';
+import { AgendaComponent } from './home-especialista/agenda/agenda.component';
+import { SolicitarTurnoComponent } from './shared/solicitar-turno/solicitar-turno.component';
+import { TurnosPacienteComponent } from './home-paciente/turnos-paciente/turnos-paciente.component';
+import { TurnosAdminComponent } from './home-admin/turnos-admin/turnos-admin.component';
+import { TurnoEspecialistaComponent } from './home-especialista/turno-especialista/turno-especialista.component';
 
 
 
@@ -17,11 +25,20 @@ import { ReactiveFormsModule } from '@angular/forms';
     HomePacienteComponent,
     HomeEspecialistaComponent,
     AltaAdminComponent,
-    ControlComponent
+    ControlComponent,
+    MailNoVerificadoComponent,
+    PerfilNoVerificadoComponent,
+    PerfilComponent,
+    AgendaComponent,
+    SolicitarTurnoComponent,
+    TurnosPacienteComponent,
+    TurnosAdminComponent,
+    TurnoEspecialistaComponent
   ],
   imports: [
     CommonModule,
     HomeRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     NgxSpinnerModule
   ]

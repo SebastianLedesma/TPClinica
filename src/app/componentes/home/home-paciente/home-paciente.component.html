@@ -1,16 +1,8 @@
-<!-- <div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-    <a (click)="logout()">Salir</a>
-</div>
-
-<div id="main">
-    <button class="openbtn" (click)="openNav()">&#9776;</button>
-    <h2>Mi panel</h2>
-    <router-outlet></router-outlet>
-</div> -->
-
 <div id="mySidebar" class="sidebar">
     <a class="closebtn" (click)="closeNav()">&times;</a>
+    <a routerLink="mi-perfil">Mi perfil</a>
+    <a routerLink="mis-turnos">Mis turnos</a>
+    <a routerLink="solicitar-turno">Solicitar turno</a>
     <a (click)="logout()">Salir</a>
 </div>
 

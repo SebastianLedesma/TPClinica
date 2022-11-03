@@ -14,6 +14,21 @@ import { FirestoreService } from '../services/firestore.service';
 })
 export class RegistroUsuarioComponent implements OnInit {
 
+  displayStyle:string="none";
+  colorPalabra:string='';
+  palabraAMostrar:string='';
+  respuesta:string='';
+  jsonColor:any;
+
+  arrayDeColores:any[]=[
+    {colorIngles:'red',colorEspaniol:'rojo'},{colorIngles:'yellow',colorEspaniol:'amarillo'},{colorIngles:'blue',colorEspaniol:'azul'},{colorIngles:'green',colorEspaniol:'verde'},
+    {colorIngles:'black',colorEspaniol:'negro'},{colorIngles:'pink',colorEspaniol:'rosa'},
+    {colorIngles:'orange',colorEspaniol:'naranja'}
+  ]
+
+  arrayPalabras:string[]=['rojo','azul','verde','amarillo','naranja','negro','marron'];
+
+
   formulario: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     apellido: ['', [Validators.required]],
@@ -104,6 +119,36 @@ export class RegistroUsuarioComponent implements OnInit {
     }
 
     return this.nuevoPaciente;
+  }
+
+  mostrarCaptcha(){
+    this.displayStyle="block";
+    this.jsonColor = this.arrayDeColores[this.obtenerNumeroAleatorio(0,6)]
+    this.colorPalabra = this.jsonColor.colorIngles;
+
+    this.palabraAMostrar = this.arrayPalabras[this.obtenerNumeroAleatorio(0,6)];
+    console.log(this.colorPalabra);
+    console.log(this.palabraAMostrar);
+  }
+
+  verificarCaptcha(){
+    if(this.jsonColor.colorEspaniol === this.respuesta){
+      this.enviar();
+      console.log('acertaste')
+    }
+
+    this.closePopup();
+  }
+
+  closePopup() {
+    this.displayStyle = "none";
+    this.respuesta ='';
+  }
+
+  obtenerNumeroAleatorio(minimo:number,maximo:number){
+    let min = Math.ceil(minimo);
+    let max = Math.floor(maximo);
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
 }

@@ -1,0 +1,108 @@
+<div id="main">
+    <h2>Agenda</h2>
+
+    <div class="m-auto">
+        <h5>Aquí puede armar su agenda para los próximos 30 días de 09.00 hs a 18.00 hs</h5>
+
+        <div class="row row-md-8 w-75 mx-auto">
+            <form class="row g-3" [formGroup]="formulario" (ngSubmit)="crearTurnos()">
+                <div class="col-sm-3">
+                    <div *ngFor="let esp of especialista.especialidad" class="form-check">
+                        <input class="form-check-input" type="radio" name="especialidades" [id]="esp" [value]="esp"
+                            formControlName="especialidades">
+                        <label class="form-check-label" for="especialidades">
+                            {{esp}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="desde" class="form-label">Desde</label>
+                    <input type="number" class="form-control" id="edad" formControlName="desde">
+                    <small class="invalid text-danger" *ngIf="formulario.controls['desde'].errors?.['required'] &&
+                formulario.controls['desde'].touched">
+                        La hora de inicio es requerida.
+                    </small>
+                    <small class="invalid text-danger" *ngIf="(formulario.controls['desde'].errors?.['min'] || 
+                formulario.controls['desde'].errors?.['max']) &&
+                formulario.controls['desde'].touched">
+                        La hora de inicio debe ser entre las 9 y 17 hs.
+                    </small>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="hasta" class="form-label">Hasta</label>
+                    <input type="number" class="form-control" id="hasta" formControlName="hasta">
+                    <small class="invalid text-danger" *ngIf="formulario.controls['hasta'].errors?.['required'] &&
+                formulario.controls['hasta'].touched">
+                        La hora de finalización es requerida.
+                    </small>
+                    <small class="invalid text-danger" *ngIf="(formulario.controls['hasta'].errors?.['min'] || 
+                formulario.controls['hasta'].errors?.['max']) &&
+                formulario.controls['hasta'].touched">
+                        La hora de finalización debe ser entre las 10 y 18 hs.
+                    </small>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="diaInicio" class="form-label">Día de inicio</label>
+                    <input type="number" class="form-control" id="diaInicio" formControlName="diaInicio">
+                    <small class="invalid text-danger" *ngIf="formulario.controls['diaInicio'].errors?.['required'] &&
+                formulario.controls['diaInicio'].touched">
+                        El día de inicio es requerido.
+                    </small>
+                    <small class="invalid text-danger" *ngIf="(formulario.controls['diaInicio'].errors?.['min'] || 
+                formulario.controls['diaInicio'].errors?.['max']) &&
+                formulario.controls['diaInicio'].touched">
+                        El día de inicio debe ser entre 1 y 31 según corresponda.
+                    </small>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Mes de inicio</label>
+                    <select class="form-select" formControlName="mesInicio">
+                        <option selected value="">Seleccione mes</option>
+                        <option *ngFor="let mes of meses;let i = index" [value]="i">{{mes | titlecase}}</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="diaFinal" class="form-label">Día final</label>
+                    <input type="number" class="form-control" id="diaFinal" formControlName="diaFinal">
+                    <small class="invalid text-danger" *ngIf="formulario.controls['diaFinal'].errors?.['required'] &&
+                formulario.controls['diaFinal'].touched">
+                        El día de final es requerido.
+                    </small>
+                    <small class="invalid text-danger" *ngIf="(formulario.controls['diaFinal'].errors?.['min'] || 
+                formulario.controls['diaFinal'].errors?.['max']) &&
+                formulario.controls['diaFinal'].touched">
+                        El día de final debe ser entre 1 y 31 según corresponda.
+                    </small>
+                </div>
+                <div class="col-md-3">
+                    <label for="mesFinal" class="form-label">Mes de finalización</label>
+                    <select class="form-select" formControlName="mesFinal">
+                        <option selected value="">Seleccione mes</option>
+                        <option *ngFor="let mes of meses;let i = index" [value]="i">{{mes | titlecase}}</option>
+                    </select>
+                </div>
+
+                <div class="mx-auto">
+                    <div *ngFor="let dia of diasDeAtencion; let i=index" class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" formArrayName="diasSeleccionados"
+                            [value]="dia.value" (change)="onCheckboxChange($event)"><label class="form-check-label"
+                            for="">{{ dia.name}}</label>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <button [disabled]="formulario.invalid" type="submit" class="btn btn-secondary btn-lg"
+                        id="btn-encuesta">Enviar</button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

@@ -1,10 +1,12 @@
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+    <a routerLink="mi-perfil">Mi perfil</a>
+    <a routerLink="mis-turnos">Mis turnos</a>
+    <a routerLink="agenda">Mis horarios</a>
     <a (click)="logout()">Salir</a>
 </div>
 
 <div id="main">
-    <!-- <button class="openbtn" (click)="openNav()">&#9776;</button> -->
     <h2>Panel de especialista</h2>
     <router-outlet></router-outlet>
 </div>

@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-md-3 border border-dark mx-2 p-3">
+        <h4>Especialisdades:</h4>
+        <button *ngFor="let esp of especialidades" class="btn btn-warning m-2" (click)="mostrarEspecialistas(esp)">{{ esp | titlecase }}</button>
+    </div>
+
+    <div *ngIf="divEspecialistas" class="col-md-2 border border-dark mx-2 p-3">
+        <h4>Especialistas en {{ especialidadElegida }}:</h4>
+        <button *ngFor="let esp of especialistasAMostrar" class="btn btn-warning m-2" (click)="mostrarTurnos(esp)">{{ esp.nombre }} {{ esp.apellido }}</button>
+    </div>
+
+    <div *ngIf="divTurnos" class="col border border-dark mx-2 p-3">
+        <h4>Turnos con {{ especialistaSeleccionado.nombre }} {{ especialistaSeleccionado.apellido }}:</h4>
+        <button *ngFor="let turno of turnosAMostrar" class="btn btn-warning m-2" (click)="verTurno(turno)">
+            {{ especialistaSeleccionado.nombre }} {{ especialistaSeleccionado.apellido }}
+            {{ turno.fecha | date:'short' }}
+        </button>
+    </div>
+
+    <div *ngIf="divPacientes" class="col-md-3 border border-dark mx-2 p-3">
+        <h4>Pacientes:</h4>
+        <button *ngFor="let pac of pacientes" class="btn btn-warning m-2" (click)="pedirTurno(pac)">{{ pac.apellido }} {{ pac.nombre }}, DNI: {{ pac.dni }}</button>
+    </div>
+</div>
+
+
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

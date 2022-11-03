@@ -1,0 +1,44 @@
+<div class="row-md-9 w-75 mx-auto">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Nombre: <strong>{{ nombre }}</strong></label>
+            
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Apellido: <strong>{{ apellido }}</strong></label>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Edad: <strong>{{ edad }}</strong></label>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Dni: <strong>{{ dni }}</strong></label>
+            
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Mail: <strong>{{ mail }}</strong></label>
+        </div>
+        <div *ngIf="obraSocial" class="col-md-4">
+            <label class="form-label">Obra Social: <strong>{{ obraSocial }}</strong></label>
+        </div>
+        <div *ngIf="especialidades" class="col-md-4">
+            <label class="form-label">Especialidades</label>
+            <br>
+            <strong *ngFor="let esp of especialidades">{{ esp }}<br></strong>
+        </div>
+        <div class="col-md-4">
+            <label for="obraSocial" class="form-label">Imagen uno</label>
+            <br>
+            <img [src]="urlImgenUno" alt="Imagen de perfil uno">
+        </div>
+        <div *ngIf="urlImagenDos" class="col-md-4">
+            <label for="obraSocial" class="form-label">Imagen Dos</label>
+            <br>
+            <img [src]="urlImagenDos" alt="Imagen de perfil dos">
+        </div>
+        
+        
+    </div>
+</div>
+
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

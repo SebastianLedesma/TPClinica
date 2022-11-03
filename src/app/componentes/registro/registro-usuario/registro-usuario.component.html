@@ -1,10 +1,38 @@
 <app-nav></app-nav>
 
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Comprueba que eres un humano</h4>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3 text-center">
+            <strong class="mt-5" [ngStyle]="{'color':colorPalabra}">{{ palabraAMostrar }}</strong>
+            <br>
+            <label for="exampleFormControlInput1" class="form-label">¿De qúe color es la palabra?</label>
+            <input type="text" class="form-control" [(ngModel)]="respuesta">
+          </div>
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="closePopup()">
+            Cerrar
+          </button>
+  
+          <button type="button" class="btn btn-secondary" (click)="verificarCaptcha()">
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <div class="container">
     <h4 class="mt-5 mb-2 text-center">Registro de pacientes</h4>
 
     <div class="row-md-9 w-75 mx-auto">
-        <form class="row g-3" [formGroup]="formulario" (ngSubmit)="enviar()">
+        <form class="row g-3" [formGroup]="formulario" (ngSubmit)="mostrarCaptcha()">
             <div class="col-md-4">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" formControlName="nombre">

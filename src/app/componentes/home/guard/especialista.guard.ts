@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AuthService } from '../../registro/services/auth.service';
 import { FirestoreService } from '../../registro/services/firestore.service';
 import { SpinnerService } from '../../services/spinner.service';
@@ -9,7 +9,7 @@ import { SpinnerService } from '../../services/spinner.service';
 })
 export class EspecialistaGuard implements CanActivate {
 
-  constructor(private authService:AuthService,private fireStoreService:FirestoreService,private spinnerService:SpinnerService){}
+  constructor(private authService:AuthService,private fireStoreService:FirestoreService,private spinnerService:SpinnerService,private router:Router){}
 
   async canActivate(
     route: ActivatedRouteSnapshot,
@@ -18,13 +18,17 @@ export class EspecialistaGuard implements CanActivate {
       this.spinnerService.mostrarSpinner();
       const uid = this.authService.getIdUsuario();
       const doc = (await this.fireStoreService.obtenerDoc('especialistas',uid!)).data();
-      this.spinnerService.ocultarSpinner();
       
-      if(doc?.habilitado){
+      this.spinnerService.ocultarSpinner();
+
+      if(doc?.['habilitado']){
         return true;
       }else{
+        this.router.navigate(['home/perfil-no-verificado']);
         return false;
       }
+
+      
       
   }
   
