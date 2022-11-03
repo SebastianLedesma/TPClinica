@@ -377,15 +377,15 @@ export class TurnoEspecialistaComponent implements OnInit {
 
     this.spinnerService.mostrarSpinner();
 
-    this.fireStoreService.agregarDoc(turnoAceptadoo, 'turnos_aceptados', this.turnoSeleccionado.id_turno)
+    this.fireStoreService.agregarDoc(turnoAceptadoo, 'turnos_aceptados', turnoAceptadoo.id_turno)
       .then(resp => {
         console.log('turno aceptado');
 
-        this.estadoTurnoService.cambiarAAceptado(this.turnoSeleccionado.id)
+        this.estadoTurnoService.cambiarAAceptado(turnoAceptadoo.id_turno)
           .then(update => {
             console.log('actualizado');
 
-            this.estadoTurnoService.borrarTurno('turnos_reservados', this.turnoSeleccionado.id_turno)
+            this.estadoTurnoService.borrarTurno('turnos_reservados', turnoAceptadoo.id_turno)
               .then(resp => {
                 this.spinnerService.ocultarSpinner();
                 console.log('borrado');
@@ -561,7 +561,9 @@ export class TurnoEspecialistaComponent implements OnInit {
         this.estadoTurnoService.cambiarAFinalizado(turnoFinalizado.id_turno)
           .then(terminado => {
             console.log('actualizado');
-
+            this.closePopup();
+            this.spinnerService.ocultarSpinner();
+            this.mostrarTabla=false;
             this.estadoTurnoService.borrarTurno('turnos_aceptados', turnoFinalizado.id_turno)
               .then(resp => {
                 this.spinnerService.ocultarSpinner();
