@@ -7,3 +7,8 @@ Si sos especialista podés armar tu agenda y tener un control sobre los turnos a
 
 ## ¿Cómo me registro?
 Si soy paciente:
+
+
+
+https://user-images.githubusercontent.com/50058025/199815975-7711a92a-3857-43d8-92cb-8f490cbd858a.mp4
+
