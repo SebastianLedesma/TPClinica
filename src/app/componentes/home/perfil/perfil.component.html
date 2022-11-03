@@ -1,26 +1,30 @@
 <div class="row-md-9 w-75 mx-auto">
     <div class="row g-3">
         <div class="col-md-4">
-            <label class="form-label">Nombre: <strong>{{ nombre }}</strong></label>
-            
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" readonly [value]="nombre">            
         </div>
         <div class="col-md-4">
-            <label class="form-label">Apellido: <strong>{{ apellido }}</strong></label>
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="apellido" readonly [value]="apellido">
         </div>
         <div class="col-md-4">
-            <label class="form-label">Edad: <strong>{{ edad }}</strong></label>
+            <label for="edad" class="form-label">Edad</label>
+            <input type="number" class="form-control" id="edad" readonly [value]="edad">
         </div>
         <div class="col-md-4">
-            <label class="form-label">Dni: <strong>{{ dni }}</strong></label>
-            
+            <label for="dni" class="form-label">Dni</label>
+            <input type="text" class="form-control" id="dni" readonly [value]="dni">
         </div>
         <div class="col-md-4">
-            <label class="form-label">Mail: <strong>{{ mail }}</strong></label>
+            <label for="email" class="form-label">Mail</label>
+            <input type="email" class="form-control" id="email" readonly [value]="mail">
         </div>
         <div *ngIf="obraSocial" class="col-md-4">
-            <label class="form-label">Obra Social: <strong>{{ obraSocial }}</strong></label>
+            <label for="obraSocial" class="form-label">Obra social</label>
+            <input type="text" class="form-control" id="obraSocial" readonly [value]="obraSocial">
         </div>
-        <div *ngIf="especialidades" class="col-md-4">
+        <div *ngIf="especialidades.length > 0" class="col-md-4">
             <label class="form-label">Especialidades</label>
             <br>
             <strong *ngFor="let esp of especialidades">{{ esp }}<br></strong>

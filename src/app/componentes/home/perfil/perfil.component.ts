@@ -21,7 +21,7 @@ export class PerfilComponent implements OnInit {
   mail:string='';
   imagenUno='';
   imagenDos='';
-  especialidades=[];
+  especialidades=[]=[];
   urlImgenUno:string='';
   urlImagenDos:string='';
   obraSocial:string='';
@@ -78,7 +78,6 @@ export class PerfilComponent implements OnInit {
       }else{
         this.obtenerImagenes('administradores',this.imagenUno);
       }
-
     }
   }
 
