@@ -12,3 +12,10 @@ Si soy paciente:
 
 https://user-images.githubusercontent.com/50058025/199815975-7711a92a-3857-43d8-92cb-8f490cbd858a.mp4
 
+
+## ¿Si soy especialista,cómo indico mis horarios de atención?
+
+
+
+https://user-images.githubusercontent.com/50058025/199817665-63c38271-5001-4dab-926a-e1f667c764f8.mp4
+
