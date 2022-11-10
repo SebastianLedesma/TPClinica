@@ -18,6 +18,11 @@ https://user-images.githubusercontent.com/50058025/199815975-7711a92a-3857-43d8-
 https://user-images.githubusercontent.com/50058025/199826727-2e7aebe2-95ee-42a4-a1e9-9231e15fa02e.mp4
 
 
+## Si soy paciente¿cómo puedo acceder a mi historia clínica?
+
+
+https://user-images.githubusercontent.com/50058025/201213238-2a94c20d-73f3-4431-82ab-e8919e0d7420.mp4
+
 
 ## ¿Si soy especialista,cómo indico mis horarios de atención?
 
@@ -33,6 +38,7 @@ https://user-images.githubusercontent.com/50058025/199827056-88be4572-9bf0-489f-
 ## ¿Si soy especialista,cómo agrego un diagnóstico del paciente?
 
 
-https://user-images.githubusercontent.com/50058025/199827526-2ed67355-70bf-46cc-86a0-d90e8f70f172.mp4
+https://user-images.githubusercontent.com/50058025/201213037-c682e770-345d-487b-8696-26078c2ba3c7.mp4
+
 
 
