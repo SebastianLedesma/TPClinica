@@ -5,6 +5,7 @@ import { Paciente } from '../../../registro/clases/paciente';
 
 import pdfMake from "pdfmake/build/pdfmake"; 
 import pdfFonts from "pdfmake/build/vfs_fonts";  
+import { Router } from '@angular/router';
 pdfMake.vfs = pdfFonts.pdfMake.vfs; 
 
 @Component({
@@ -20,13 +21,14 @@ export class HistoriaClinicaComponent implements OnInit {
 
   mostrarBotonPDF:boolean=false;
 
-  constructor(private fireStoreService: FirestoreService, private spinnerService: SpinnerService) { }
+  constructor(private fireStoreService: FirestoreService, private spinnerService: SpinnerService, private router:Router) { }
 
   ngOnInit(): void {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     this.mostrarBotonPDF=false;
+    
     if(this.id_paciente){
       this.spinnerService.mostrarSpinner();
       //console.log(changes['id_paciente'].currentValue);
@@ -46,7 +48,7 @@ export class HistoriaClinicaComponent implements OnInit {
           return turno;
         });
 
-        if(this.turnosFinalizados.length){
+        if(this.turnosFinalizados.length && !this.router.url.includes('pacientes') && !this.router.url.includes('admin')){
           this.mostrarBotonPDF=true;
         }
         this.spinnerService.ocultarSpinner();
