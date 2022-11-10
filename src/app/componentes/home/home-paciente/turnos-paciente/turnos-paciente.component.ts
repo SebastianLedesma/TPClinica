@@ -20,12 +20,12 @@ export class TurnosPacienteComponent implements OnInit {
   textoModal: string = '';
   mostrarBotonCalificacion: boolean = false;
 
-  displayCalificacionStyle="none";
-  tituloCalificacionModal='';
-  mensajeCalificacion='';
-  textoLabelCalifiacion='';
-  readonlyCalificacion=false;
-  botonCalificacion:boolean=false;
+  displayCalificacionStyle = "none";
+  tituloCalificacionModal = '';
+  mensajeCalificacion = '';
+  textoLabelCalifiacion = '';
+  readonlyCalificacion = false;
+  botonCalificacion: boolean = false;
 
   displayFormStyle = "none";
   mostrarBotonForm: boolean = false;
@@ -76,6 +76,18 @@ export class TurnosPacienteComponent implements OnInit {
 
   nombreColeccionABorrar: string = '';
 
+  displayDatosStyle: string = "none";
+  altura: number = 0;
+  peso: number = 0;
+  temperatura: number = 0;
+  presion: number = 0;
+  tituloDatoUno: string = '';
+  valorDatoUno: string = '';
+  tituloDatoDos: string = '';
+  valorDatoDos: string = '';
+  tituloDatoTres: string = '';
+  valorDatoTres: string = '';
+
   constructor(private fireStoreService: FirestoreService, private spinnerService: SpinnerService, private authService: AuthService, private estadoTurnoService: EstadoTurnoService) { }
 
   ngOnInit(): void {
@@ -91,16 +103,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.turnosReservados = resp;
         this.idUsuarioActual = localStorage.getItem('id_paciente')!;
 
-        this.turnosReservados = this.turnosReservados.filter(turno => {
-          if (turno.id_paciente === this.idUsuarioActual) {
-            let fechaTimeStamp = turno.fecha!;
-            let date = new Timestamp(parseInt(fechaTimeStamp.toString().substring(18, fechaTimeStamp.toString().indexOf(','))), 0).toDate();
-            turno.fecha = date;
-            return true
-          } else {
-            return false;
-          }
-        });
+        this.turnosReservados = this.turnosReservados.filter(turno => this.filtrarPorId(turno));
 
       });
 
@@ -108,38 +111,14 @@ export class TurnosPacienteComponent implements OnInit {
       .subscribe(resp => {
         this.turnosRechazados = resp;
         this.idUsuarioActual = localStorage.getItem('id_paciente')!;
-
-        this.turnosRechazados = this.turnosRechazados.filter(turno => {
-          if (turno.id_paciente === this.idUsuarioActual) {
-            let fechaTimeStamp = turno.fecha!;
-            let date = new Timestamp(parseInt(fechaTimeStamp.toString().substring(18, fechaTimeStamp.toString().indexOf(','))), 0).toDate();
-            turno.fecha = date;
-            return true
-          } else {
-            return false;
-          }
-        });
-
-        //console.log(this.turnosRechazados);
+        this.turnosRechazados = this.turnosRechazados.filter(turno => this.filtrarPorId(turno));
       });
 
     this.fireStoreService.obtenerDocs('turnos_cancelados')
       .subscribe(resp => {
         this.turnosCancelados = resp;
         this.idUsuarioActual = localStorage.getItem('id_paciente')!;
-
-        this.turnosCancelados = this.turnosCancelados.filter(turno => {
-          if (turno.id_paciente === this.idUsuarioActual) {
-            let fechaTimeStamp = turno.fecha!;
-            let date = new Timestamp(parseInt(fechaTimeStamp.toString().substring(18, fechaTimeStamp.toString().indexOf(','))), 0).toDate();
-            turno.fecha = date;
-            return true
-          } else {
-            return false;
-          }
-        });
-
-        //console.log(this.turnosCancelados);
+        this.turnosCancelados = this.turnosCancelados.filter(turno => this.filtrarPorId(turno));
       });
 
 
@@ -147,20 +126,8 @@ export class TurnosPacienteComponent implements OnInit {
       .subscribe(resp => {
         this.turnosFinalizados = resp;
         this.idUsuarioActual = localStorage.getItem('id_paciente')!;
-
-        this.turnosFinalizados = this.turnosFinalizados.filter(turno => {
-          if (turno.id_paciente === this.idUsuarioActual) {
-            let fechaTimeStamp = turno.fecha!;
-            let date = new Timestamp(parseInt(fechaTimeStamp.toString().substring(18, fechaTimeStamp.toString().indexOf(','))), 0).toDate();
-            turno.fecha = date;
-            return true
-          } else {
-            return false;
-          }
-        });
-
+        this.turnosFinalizados = this.turnosFinalizados.filter(turno => this.filtrarPorId(turno));
         this.spinnerService.ocultarSpinner();
-        //console.log(this.turnosFinalizados);
       });
 
 
@@ -168,17 +135,7 @@ export class TurnosPacienteComponent implements OnInit {
       .subscribe(resp => {
         this.turnosAceptados = resp;
         this.idUsuarioActual = localStorage.getItem('id_paciente')!;
-
-        this.turnosAceptados = this.turnosAceptados.filter(turno => {
-          if (turno.id_paciente === this.idUsuarioActual) {
-            let fechaTimeStamp = turno.fecha!;
-            let date = new Timestamp(parseInt(fechaTimeStamp.toString().substring(18, fechaTimeStamp.toString().indexOf(','))), 0).toDate();
-            turno.fecha = date;
-            return true
-          } else {
-            return false;
-          }
-        });
+        this.turnosAceptados = this.turnosAceptados.filter(turno => this.filtrarPorId(turno));
       });
 
   }
@@ -380,26 +337,26 @@ export class TurnosPacienteComponent implements OnInit {
     this.displayStyle = "block";
   }
 
-  async editarCalificacion(turno:any,coleccion:string){
+  async editarCalificacion(turno: any, coleccion: string) {
     this.spinnerService.mostrarSpinner();
-      const resp = (await this.fireStoreService.obtenerDoc('calificacion_turnos', turno.id_turno)).data();
+    const resp = (await this.fireStoreService.obtenerDoc('calificacion_turnos', turno.id_turno)).data();
 
-      if (resp) {
-        this.resenia = resp!;
-        this.mensajeCalificacion = this.resenia.calificacion;
-        this.readonlyCalificacion = true;
-        this.tituloCalificacionModal = "Ya calificaste la atención";
-        this.textoLabelCalifiacion = "Calificación del especialista";
-        this.mostrarBotonCalificacion=false;
-      }else{
-        this.turnoSeleccionado=turno;
-        this.readonlyCalificacion = false;
-        this.mostrarBotonCalificacion=true;
-        this.tituloCalificacionModal = "Calificación de la atención";
-        this.textoLabelCalifiacion = "Indica brevemente qué te pareció la atención del especialista";
-      }
-      this.displayCalificacionStyle = "block";
-      this.spinnerService.ocultarSpinner();
+    if (resp) {
+      this.resenia = resp!;
+      this.mensajeCalificacion = this.resenia.calificacion;
+      this.readonlyCalificacion = true;
+      this.tituloCalificacionModal = "Ya calificaste la atención";
+      this.textoLabelCalifiacion = "Calificación del especialista";
+      this.mostrarBotonCalificacion = false;
+    } else {
+      this.turnoSeleccionado = turno;
+      this.readonlyCalificacion = false;
+      this.mostrarBotonCalificacion = true;
+      this.tituloCalificacionModal = "Calificación de la atención";
+      this.textoLabelCalifiacion = "Indica brevemente qué te pareció la atención del especialista";
+    }
+    this.displayCalificacionStyle = "block";
+    this.spinnerService.ocultarSpinner();
   }
 
   closePopup() {
@@ -407,12 +364,13 @@ export class TurnosPacienteComponent implements OnInit {
     this.nombreColeccionABorrar = '';
     this.mostrarBoton = false;
     this.mostrarBotonCalificacion = false;
-    this.readonly=false;
-    this.mensajeResenia='';
+    this.readonly = false;
+    this.mensajeResenia = '';
     this.displayStyle = "none";
-    this.displayCalificacionStyle="none";
-    this.mensajeCalificacion='';
-    this.readonlyCalificacion=false;
+    this.displayCalificacionStyle = "none";
+    this.mensajeCalificacion = '';
+    this.readonlyCalificacion = false;
+    this.displayDatosStyle="none";
   }
 
 
@@ -427,10 +385,10 @@ export class TurnosPacienteComponent implements OnInit {
 
   closeDivForm() {
     this.displayFormStyle = "none";
-    this.turnoSeleccionado=null;
-    this.sugerenciaMensaje='';
-    this.tiempoEsperaButton='';
-    this.recepcionButton='';
+    this.turnoSeleccionado = null;
+    this.sugerenciaMensaje = '';
+    this.tiempoEsperaButton = '';
+    this.recepcionButton = '';
   }
 
   cancelarTurno() {
@@ -536,38 +494,54 @@ export class TurnosPacienteComponent implements OnInit {
 
 
   async verResenia(tipo: string, turno: any) {
-    if (tipo === 'diagnostico') {
+    if (tipo === 'diagnostico_turnos') {
       this.tituloModal = 'Detalle de la visita';
       this.textoModal = 'Diagnóstico del especialista'
-    } else {
-      this.tituloModal = 'Turno cancelado';
-      this.textoModal = 'Motivo de la cancelación';
-    }
-    
-    const resp = (await this.fireStoreService.obtenerDoc('resenias', turno.id_turno)).data();
 
-    if (resp) {
-      this.resenia = resp!;
-      this.mensajeResenia = this.resenia.motivo;
-      this.readonly = true;
-      this.displayStyle = "block";
-    }else{
-      this.editarDivModal(turno,'calificacion');
-    }
+      const resp = (await this.fireStoreService.obtenerDoc('diagnostico_turnos', turno.id_turno)).data();
+      console.log(resp);
+      if (resp) {
+        this.resenia = resp['motivo'];
+        this.altura = resp['altura'];
+        this.peso = resp['peso'];
+        this.temperatura = resp['temperatura'];
+        this.presion = resp['presion'];
+        this.tituloDatoUno = resp['datos_dinamicos'][0].clave;
+        this.valorDatoUno = resp['datos_dinamicos'][0].valor;
+        this.tituloDatoDos = resp['datos_dinamicos'][1].clave || '';
+        this.valorDatoDos = resp['datos_dinamicos'][1].valor || '';
+        this.tituloDatoTres = resp['datos_dinamicos'][2].clave || '';
+        this.valorDatoTres = resp['datos_dinamicos'][2].valor || '';
+        this.readonly=true;
+        this.displayDatosStyle = "block";
+      }
 
+    }else {
+        this.tituloModal = 'Turno cancelado';
+        this.textoModal = 'Motivo de la cancelación';
+        const resp = (await this.fireStoreService.obtenerDoc('resenias', turno.id_turno)).data();
+
+        if (resp) {
+          this.resenia = resp!;
+          this.mensajeResenia = this.resenia.motivo;
+          this.readonly = true;
+          this.displayStyle = "block";
+        } else {
+          this.editarDivModal(turno, 'calificacion');
+        }
+      }
   }
 
-
   async verEncuesta(turno: any) {
-    
+
     this.spinnerService.mostrarSpinner();
     const resp = (await this.fireStoreService.obtenerDoc('encuestas_de_turnos', turno.id_turno)).data();
     this.spinnerService.ocultarSpinner();
-  
+
     if (resp) {
       this.turnoSeleccionado = resp!;
-      this.sugerenciaMensaje=this.turnoSeleccionado.sugerencia;
-      this.recepcionButton= this.turnoSeleccionado.recepcion;
+      this.sugerenciaMensaje = this.turnoSeleccionado.sugerencia;
+      this.recepcionButton = this.turnoSeleccionado.recepcion;
       this.tiempoEsperaButton = this.turnoSeleccionado.tiempoEspera;
       this.openDivForm(this.turnoSeleccionado);
     } {
@@ -597,9 +571,21 @@ export class TurnosPacienteComponent implements OnInit {
       .catch(error => console.log(error))
       .finally(() => {
         this.closeDivForm();
-        this.mostrarTabla=false;
+        this.mostrarTabla = false;
         this.spinnerService.ocultarSpinner()
       });
+  }
+
+
+  filtrarPorId(turno: any) {
+    if (turno.id_paciente === this.idUsuarioActual) {
+      let fechaTimeStamp = turno.fecha!;
+      let date = new Timestamp(parseInt(fechaTimeStamp.toString().substring(18, fechaTimeStamp.toString().indexOf(','))), 0).toDate();
+      turno.fecha = date;
+      return true
+    } else {
+      return false;
+    }
   }
 
 }

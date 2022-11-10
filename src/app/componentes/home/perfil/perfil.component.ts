@@ -12,88 +12,108 @@ import { SpinnerService } from '../../services/spinner.service';
 })
 export class PerfilComponent implements OnInit {
 
-  url:string='';
+  url: string = '';
 
-  nombre:string='';
-  apellido:string='';
-  edad:number=0;
-  dni:string='';
-  mail:string='';
-  imagenUno='';
-  imagenDos='';
-  especialidades=[]=[];
-  urlImgenUno:string='';
-  urlImagenDos:string='';
-  obraSocial:string='';
+  uidUsuario:string='';
 
-  constructor(private router:Router,private authService:AuthService,private firestoreService:FirestoreService,private spinnerService:SpinnerService,
-    private storage:Storage) { }
+  turnosFinalizados: any[] = [];
+  nombre: string = '';
+  apellido: string = '';
+  edad: number = 0;
+  dni: string = '';
+  mail: string = '';
+  imagenUno = '';
+  imagenDos = '';
+  especialidades = [] = [];
+  urlImgenUno: string = '';
+  urlImagenDos: string = '';
+  obraSocial: string = '';
+
+  mostrarHistoria: boolean = false;
+
+  constructor(private router: Router, private authService: AuthService, private firestoreService: FirestoreService, private spinnerService: SpinnerService,
+    private storage: Storage) { }
 
   ngOnInit(): void {
+    this.mostrarHistoria = false;
     this.url = this.router.url;
 
     this.spinnerService.mostrarSpinner();
 
     this.authService.getInfoUsuarioLogueado()
-    .subscribe( resp => {
-      
-      let uidUsuario = resp?.uid;
+      .subscribe(resp => {
 
-      if(uidUsuario){
-      
-        if(this.url.includes('paciente')){
-          this.obtenerUsuario('pacientes',uidUsuario);
-        }else if (this.url.includes('admin')){
-          this.obtenerUsuario('administradores',uidUsuario);
-        }else{
-          this.obtenerUsuario('especialistas',uidUsuario);
+        this.uidUsuario = resp?.uid!;
+
+        if (this.uidUsuario) {
+
+          if (this.url.includes('paciente')) {
+            this.obtenerUsuario('pacientes',this.uidUsuario);
+          } else if (this.url.includes('admin')) {
+            this.obtenerUsuario('administradores', this.uidUsuario);
+          } else {
+            this.obtenerUsuario('especialistas', this.uidUsuario);
+          }
         }
-      }
 
-    });
+      });
   }
 
 
-  async obtenerUsuario(nombreCollection:string,uid:string){
-    const resp = (await this.firestoreService.obtenerDoc(nombreCollection,uid)).data();
-    
-    if(resp){
+  async obtenerUsuario(nombreCollection: string, uid: string) {
+    const resp = (await this.firestoreService.obtenerDoc(nombreCollection, uid)).data();
+
+    if (resp) {
       this.nombre = resp?.['nombre'];
-      this.apellido=resp?.['apellido'];
+      this.apellido = resp?.['apellido'];
       this.edad = resp?.['edad'];
       this.mail = resp?.['mail'];
       this.dni = resp?.['dni'];
       this.imagenUno = resp?.['imagenUno'];
 
-      if(nombreCollection === 'pacientes'){
+      if (nombreCollection === 'pacientes') {
         this.obraSocial = resp?.['obraSocial'];
         this.imagenDos = resp?.['imagenDos'];
-        this.obtenerImagenes('pacientes',this.imagenUno);
-        this.obtenerImagenes('pacientes',this.imagenDos);
+        this.obtenerImagenes('pacientes', this.imagenUno);
+        this.obtenerImagenes('pacientes', this.imagenDos);
 
-      }else if(nombreCollection === 'especialistas'){
+        this.mostrarHistoria = true;
+
+        this.firestoreService.obtenerDocs('diagnostico_turnos')
+          .subscribe(resp => {
+            this.turnosFinalizados = resp.filter(turnoFinalizado => {
+
+              if (turnoFinalizado.nombre_paciente === `${this.nombre} ${this.apellido}`) {
+                return true;
+              } else {
+                return false;
+              }
+            })
+            this.spinnerService.ocultarSpinner();
+          })
+
+      } else if (nombreCollection === 'especialistas') {
         this.especialidades = resp?.['especialidad'];
-        
-        this.obtenerImagenes('especialistas',this.imagenUno);
-      }else{
-        this.obtenerImagenes('administradores',this.imagenUno);
+
+        this.obtenerImagenes('especialistas', this.imagenUno);
+      } else {
+        this.obtenerImagenes('administradores', this.imagenUno);
       }
     }
   }
 
-  obtenerImagenes(path:string,nombreImgen:string){
-    const imgRef = ref(this.storage,`${path}/${nombreImgen}`);
+  obtenerImagenes(path: string, nombreImgen: string) {
+    const imgRef = ref(this.storage, `${path}/${nombreImgen}`);
 
     getDownloadURL(imgRef)
-    .then(url => {
-      if(nombreImgen.includes('Uno')){
-        this.urlImgenUno = url;
-      }else{
-        this.urlImagenDos = url;
-      }
-      this.spinnerService.ocultarSpinner();
-    })
+      .then(url => {
+        if (nombreImgen.includes('Uno')) {
+          this.urlImgenUno = url;
+        } else {
+          this.urlImagenDos = url;
+        }
+        this.spinnerService.ocultarSpinner();
+      })
   }
-
 
 }

@@ -16,6 +16,8 @@ import { SolicitarTurnoComponent } from './shared/solicitar-turno/solicitar-turn
 import { TurnosPacienteComponent } from './home-paciente/turnos-paciente/turnos-paciente.component';
 import { TurnosAdminComponent } from './home-admin/turnos-admin/turnos-admin.component';
 import { TurnoEspecialistaComponent } from './home-especialista/turno-especialista/turno-especialista.component';
+import { UsuariosComponent } from './home-admin/usuarios/usuarios.component';
+import { PacientesComponent } from './home-especialista/pacientes/pacientes.component';
 
 const routes:Routes=[
   {
@@ -45,6 +47,10 @@ const routes:Routes=[
           {
             path:'control',
             component:ControlComponent
+          },
+          {
+            path:'usuarios',
+            component:UsuariosComponent
           }
         ]
       },
@@ -82,6 +88,10 @@ const routes:Routes=[
           {
             path:'agenda',
             component: AgendaComponent
+          },
+          {
+            path:'pacientes',
+            component: PacientesComponent
           }
         ]
       },

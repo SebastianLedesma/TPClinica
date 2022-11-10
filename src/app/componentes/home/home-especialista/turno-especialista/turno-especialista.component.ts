@@ -20,6 +20,19 @@ export class TurnoEspecialistaComponent implements OnInit {
   textoModal: string = '';
   resenia: any;
 
+  mostrarDivDatos: boolean = false;
+  altura: number = 0;
+  peso: number = 0;
+  temperatura: number = 0;
+  presion: number = 0;
+  tituloDatoUno: string = '';
+  valorDatoUno: string = '';
+  tituloDatoDos: string = '';
+  valorDatoDos: string = '';
+  tituloDatoTres: string = '';
+  valorDatoTres: string = '';
+
+
   nombreColeccionABorrar: string = '';
 
   turnoSeleccionado: any;
@@ -67,7 +80,6 @@ export class TurnoEspecialistaComponent implements OnInit {
         const esp = (await this.fireStoreService.obtenerDoc('especialistas', localStorage.getItem('id_especialista')!)).data();
 
         if (esp) {
-          //localStorage.setItem('especialista', esp!);
           this.especialistaActual = esp!;
         }
 
@@ -212,7 +224,6 @@ export class TurnoEspecialistaComponent implements OnInit {
         this.arrayFiltroPacientes.push(this.turnosFinalizados[index].nombre_paciente);
       }
     }
-
     //console.log(this.arrayFiltroPacientes);
   }
 
@@ -301,6 +312,7 @@ export class TurnoEspecialistaComponent implements OnInit {
       if (nombreColleccion === 'turnos_aceptados') {
         this.tituloModal = "Confirmar atención";
         this.textoModal = "Ingrese el diagnóstico del paciente";
+        this.mostrarDivDatos = true;
         this.mostrarBoton = true;
       } else if (nombreColleccion === 'turnos_disponibles') {
         this.mostrarBotonCancelado = true;
@@ -323,6 +335,7 @@ export class TurnoEspecialistaComponent implements OnInit {
     this.turnoSeleccionado = null;
     this.nombreColleccion = null;
     this.mostrarBoton = false;
+    this.mostrarDivDatos = false;
     this.mostrarBotonCancelado = false;
     this.mostrarBotonRechazado = false;
     this.displayStyle = "none";
@@ -340,23 +353,40 @@ export class TurnoEspecialistaComponent implements OnInit {
   }
 
   async verResenia(tipo: string, turno: any) {
+    let nombreColeccion: string = '';
     if (tipo === 'cancelados') {
       this.tituloModal = "Cancelado";
       this.textoModal = "Motivo de cancelación:";
+      nombreColeccion = 'resenias';
     } else if (tipo === 'rechazados') {
       this.tituloModal = "Rechazado";
       this.textoModal = "Motivo del rechazo del turno:";
+      nombreColeccion = 'resenias';
     } else {
       this.tituloModal = "Turno realizado";
       this.textoModal = "Diagnóstico:";
+      nombreColeccion = 'diagnostico_turnos';
     }
 
 
-    const resp = (await this.fireStoreService.obtenerDoc('resenias', turno.id_turno)).data();
+    const resp = (await this.fireStoreService.obtenerDoc(nombreColeccion, turno.id_turno)).data();
     console.log(resp);
     if (resp) {
       this.resenia = resp!;
-      //console.log(this.resenia);
+
+      if (nombreColeccion === 'diagnostico_turnos') {
+        this.altura = resp['altura'];
+        this.peso = resp['peso'];
+        this.temperatura = resp['temperatura'];
+        this.presion = resp['presion'];
+        this.tituloDatoUno = resp['datos_dinamicos'][0].clave;
+        this.valorDatoUno = resp['datos_dinamicos'][0].valor;
+        this.tituloDatoDos = resp['datos_dinamicos'][1]?.clave || '';
+        this.valorDatoDos = resp['datos_dinamicos'][1]?.valor || '';
+        this.tituloDatoTres = resp['datos_dinamicos'][2]?.clave || '';
+        this.valorDatoTres = resp['datos_dinamicos'][2]?.valor || '';
+        this.mostrarDivDatos = true;
+      }
       this.openDivResenia(null, '', this.resenia.motivo);
     }
   }
@@ -381,35 +411,24 @@ export class TurnoEspecialistaComponent implements OnInit {
       .then(resp => {
         console.log('turno aceptado');
 
-        this.estadoTurnoService.cambiarAAceptado(turnoAceptadoo.id_turno)
-          .then(update => {
-            console.log('actualizado');
-
-            this.estadoTurnoService.borrarTurno('turnos_reservados', turnoAceptadoo.id_turno)
-              .then(resp => {
-                this.spinnerService.ocultarSpinner();
-                console.log('borrado');
-              })
-              .catch(error => {
-                this.spinnerService.ocultarSpinner();
-                console.log(error);
-              });
-
+        this.estadoTurnoService.borrarTurno('turnos_reservados', turnoAceptadoo.id_turno)
+          .then(resp => {
+            this.mostrarTabla = false;
+            this.spinnerService.ocultarSpinner();
+            console.log('borrado');
           })
           .catch(error => {
+            this.mostrarTabla = false;
             this.spinnerService.ocultarSpinner();
             console.log(error);
           });
 
       })
       .catch(error => {
+        this.mostrarTabla = false;
         this.spinnerService.ocultarSpinner();
         console.log(error)
       })
-      .finally(() => {
-        this.spinnerService.ocultarSpinner();
-        this.mostrarTabla = false;
-      });
   }
 
 
@@ -444,20 +463,10 @@ export class TurnoEspecialistaComponent implements OnInit {
       .then(resp => {
         console.log('turno cancelado');
 
-        this.estadoTurnoService.cambiarACancelado(turnoCancelado.id_turno)
-          .then(update => {
-            console.log('cancelado');
-
-            this.estadoTurnoService.borrarTurno('turnos_disponibles', turnoCancelado.id_turno)
-              .then(resp => {
-                this.spinnerService.ocultarSpinner();
-                console.log('borrado');
-              })
-              .catch(error => {
-                this.spinnerService.ocultarSpinner();
-                console.log(error);
-              });
-
+        this.estadoTurnoService.borrarTurno('turnos_disponibles', turnoCancelado.id_turno)
+          .then(resp => {
+            this.spinnerService.ocultarSpinner();
+            console.log('borrado');
           })
           .catch(error => {
             this.spinnerService.ocultarSpinner();
@@ -477,7 +486,6 @@ export class TurnoEspecialistaComponent implements OnInit {
 
 
   rechazarTurno() {
-    //this.turnoSeleccionado = turno;
     this.spinnerService.mostrarSpinner();
     const turnoRechazado = {
       id_turno: this.turnoSeleccionado.id,
@@ -494,20 +502,10 @@ export class TurnoEspecialistaComponent implements OnInit {
       .then(resp => {
         console.log('turno rechazado');
 
-        this.estadoTurnoService.cambiarARechazado(this.turnoSeleccionado.id)
-          .then(update => {
-            console.log('rechazado');
-
-            this.estadoTurnoService.borrarTurno('turnos_reservados', this.turnoSeleccionado.id_turno)
-              .then(resp => {
-                this.spinnerService.ocultarSpinner();
-                console.log('borrado');
-              })
-              .catch(error => {
-                this.spinnerService.ocultarSpinner();
-                console.log(error);
-              });
-
+        this.estadoTurnoService.borrarTurno('turnos_reservados', this.turnoSeleccionado.id_turno)
+          .then(resp => {
+            this.spinnerService.ocultarSpinner();
+            console.log('borrado');
           })
           .catch(error => {
             this.spinnerService.ocultarSpinner();
@@ -536,13 +534,35 @@ export class TurnoEspecialistaComponent implements OnInit {
       id_especialista: this.turnoSeleccionado.id_especialista
     }
 
-    const resenia = {
+    let arrayDinamicos: any[] = [];
+
+    if (this.tituloDatoUno && this.valorDatoUno) {
+      arrayDinamicos.push({ 'clave': this.tituloDatoUno, 'valor': this.valorDatoUno });
+    }
+
+    if (this.tituloDatoDos && this.valorDatoDos) {
+      arrayDinamicos.push({ 'clave': this.tituloDatoDos, 'valor': this.valorDatoDos });
+    }
+
+    if (this.tituloDatoTres && this.valorDatoTres) {
+      arrayDinamicos.push({ 'clave': this.tituloDatoTres, 'valor': this.valorDatoTres });
+    }
+
+
+    const diagnostico = {
       id_turno: this.turnoSeleccionado.id,
       motivo: this.mensajeResenia,
       id_paciente: this.turnoSeleccionado.id_paciente,
       fecha: this.turnoSeleccionado.fecha,
       especialidad: this.turnoSeleccionado.especialidad,
-      id_especialista: this.turnoSeleccionado.id_especialista
+      id_especialista: this.turnoSeleccionado.id_especialista,
+      nombreEspecialista: this.turnoSeleccionado.nombreEspecialista,
+      nombre_paciente: this.turnoSeleccionado.nombre_paciente,
+      altura: this.altura,
+      peso: this.peso,
+      temperatura: this.temperatura,
+      presion: this.presion,
+      datos_dinamicos: arrayDinamicos
     }
 
     this.spinnerService.mostrarSpinner();
@@ -551,29 +571,22 @@ export class TurnoEspecialistaComponent implements OnInit {
     this.fireStoreService.agregarDoc(turnoFinalizado, 'turnos_finalizados', turnoFinalizado.id_turno)
       .then(resp => {
         console.log('turno finalizado');
+      })
+      .catch(error => {
+        this.spinnerService.ocultarSpinner();
+        console.log(error)
+      });
 
-        this.fireStoreService.agregarDoc(resenia, 'resenias', resenia.id_turno)
+    this.fireStoreService.agregarDoc(diagnostico, 'diagnostico_turnos', diagnostico.id_turno)
+      .then(resp => {
+        console.log('diag agregado');
+
+        this.estadoTurnoService.borrarTurno('turnos_aceptados', turnoFinalizado.id_turno)
           .then(resp => {
-            console.log('reseña agregada');
-          })
-          .catch(error => console.log(error));
-
-        this.estadoTurnoService.cambiarAFinalizado(turnoFinalizado.id_turno)
-          .then(terminado => {
-            console.log('actualizado');
+            this.mostrarTabla=false;
             this.closePopup();
             this.spinnerService.ocultarSpinner();
-            this.mostrarTabla=false;
-            this.estadoTurnoService.borrarTurno('turnos_aceptados', turnoFinalizado.id_turno)
-              .then(resp => {
-                this.spinnerService.ocultarSpinner();
-                console.log('borrado');
-              })
-              .catch(error => {
-                this.spinnerService.ocultarSpinner();
-                console.log(error);
-              });
-
+            console.log('borrado');
           })
           .catch(error => {
             this.spinnerService.ocultarSpinner();
@@ -583,9 +596,8 @@ export class TurnoEspecialistaComponent implements OnInit {
       })
       .catch(error => {
         this.spinnerService.ocultarSpinner();
-        console.log(error)
+        console.log(error);
       });
-
   }
 
 }

@@ -1,19 +1,23 @@
 <div class="row">
-    <div class="col-md-3 border border-dark mx-2 p-3">
-        <h4>Especialisdades:</h4>
-        <button *ngFor="let esp of especialidades" class="btn btn-warning m-2" (click)="mostrarEspecialistas(esp)">{{ esp | titlecase }}</button>
+
+    <h4>Especialistas</h4>
+    <div class="col border border-dark mx-2 p-3">
+        <a *ngFor="let item of ArrayImagenesEspecialistas;" class="btn btn-primary m-1 flip-diagonal-2-br" (click)="mostrarEspecialidades(item)"><img class="img-fluid"
+            [src]="item.imagen"
+            alt="imagen de especialista"><br>{{ item.especialista }}</a>
     </div>
 
-    <div *ngIf="divEspecialistas" class="col-md-2 border border-dark mx-2 p-3">
-        <h4>Especialistas en {{ especialidadElegida }}:</h4>
-        <button *ngFor="let esp of especialistasAMostrar" class="btn btn-warning m-2" (click)="mostrarTurnos(esp)">{{ esp.nombre }} {{ esp.apellido }}</button>
+    <div *ngIf="especialidades.length > 0" class="col-md-3 border border-dark mx-2 p-3">
+        <h4>Especialidades:</h4>
+        <div *ngFor="let esp of arrayIconos">
+            <button class="redondo roll-in-left" (click)="mostrarTurnos(esp.especialidad)"><img class="img-fluid img-especialidad" [src]="esp.icono" alt="Imagen de especialista" [title]="esp.especialidad"></button>
+        </div>
     </div>
 
     <div *ngIf="divTurnos" class="col border border-dark mx-2 p-3">
         <h4>Turnos con {{ especialistaSeleccionado.nombre }} {{ especialistaSeleccionado.apellido }}:</h4>
-        <button *ngFor="let turno of turnosAMostrar" class="btn btn-warning m-2" (click)="verTurno(turno)">
-            {{ especialistaSeleccionado.nombre }} {{ especialistaSeleccionado.apellido }}
-            {{ turno.fecha | date:'short' }}
+        <button *ngFor="let turno of turnosAMostrar" class="btn btn-warning m-2 roll-in-left" (click)="verTurno(turno)">
+            {{ turno.fecha | date:'dd/MM HH:mm' }}
         </button>
     </div>
 

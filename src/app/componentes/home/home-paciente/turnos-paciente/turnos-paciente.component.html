@@ -1,3 +1,60 @@
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayDatosStyle}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Resumen de visita</h4>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Diagnóstico:</label>
+          <input type="text" class="form-control" [(ngModel)]="resenia" [readonly]="readonly" >
+        </div>
+        <div>
+          <div class="mb-3">
+            <label for="altura" class="form-label">Altura:</label>
+            <input type="number" class="form-control" name="altura" [(ngModel)]="altura" [readonly]="readonly" >
+          </div>
+          <div class="mb-3">
+            <label for="peso" class="form-label">Peso:</label>
+            <input type="number" class="form-control" name="peso" [(ngModel)]="peso" [readonly]="readonly" >
+          </div>
+          <div class="mb-3">
+            <label for="temperatura" class="form-label">Temperatura:</label>
+            <input type="number" class="form-control" name="temperatura" [(ngModel)]="temperatura" [readonly]="readonly" >
+          </div>
+          <div class="mb-3">
+            <label for="presion" class="form-label">Presión:</label>
+            <input type="number" class="form-control" name="presion" [(ngModel)]="presion" [readonly]="readonly" >
+          </div>
+
+          <hr>
+          <div *ngIf="tituloDatoUno" class="mb-3 w-100">
+            <input type="text" class="form-control w-25" name="tituloDatoUno" [(ngModel)]="tituloDatoUno" [readonly]="readonly" > : 
+            <input type="text" class="form-control w-25" name="valorDatoUno" [(ngModel)]="valorDatoUno" [readonly]="readonly" >
+          </div>
+
+          <div *ngIf="tituloDatoDos" class="mb-3 w-100">
+            <input type="text" class="form-control w-25" name="tituloDatoDos" [(ngModel)]="tituloDatoDos" [readonly]="readonly" > : 
+            <input type="text" class="form-control w-25" name="valorDatoDos" [(ngModel)]="valorDatoDos" [readonly]="readonly" >
+          </div>
+
+          <div *ngIf="tituloDatoTres" class="mb-3 w-100">
+            <input type="text" class="form-control w-25" name="tituloDatoTres" [(ngModel)]="tituloDatoTres" [readonly]="readonly" > : 
+            <input type="text" class="form-control w-25" name="valorDatoTres" [(ngModel)]="valorDatoTres" [readonly]="readonly" >
+          </div>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closePopup()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -215,7 +272,7 @@
         <td>{{ turno.nombreEspecialista }}</td>
         <td><strong>Finalizado</strong></td>
         <td>
-          <button class="btn btn-success btn-sm" (click)="verResenia('diagnostico',turno)">Ver reseña</button>
+          <button class="btn btn-success btn-sm" (click)="verResenia('diagnostico_turnos',turno)">Ver reseña</button>
           <button class="btn btn-primary btn-sm" (click)="editarCalificacion(turno,'calificacion')">Calificar
             atención</button>
           <button class="btn btn-light btn-sm" (click)="verEncuesta(turno)">Ver encuesta</button>

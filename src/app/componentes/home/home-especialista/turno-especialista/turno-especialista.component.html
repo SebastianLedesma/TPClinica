@@ -1,5 +1,5 @@
 <div
-  class="modal"
+  class="modal slide-in-blurred-top"
   tabindex="-1"
   role="dialog"
   [ngStyle]="{'display':displayStyle}">
@@ -13,7 +13,85 @@
           <label for="exampleFormControlInput1" class="form-label">Motivo:</label>
           <input type="text" class="form-control" [(ngModel)]="mensajeResenia" [readonly]="readonly" >
         </div>
+        <div *ngIf="mostrarDivDatos">
+          <div class="mb-3">
+            <label for="altura" class="form-label">Altura en cm:</label>
+            <input type="number" class="form-control" name="altura" [(ngModel)]="altura" [readonly]="readonly">
+          </div>
+          <div class="mb-3">
+            <label for="peso" class="form-label">Peso en Kg:</label>
+            <input type="number" class="form-control" name="peso" [(ngModel)]="peso" [readonly]="readonly">
+          </div>
+          <div class="mb-3">
+            <label for="temperatura" class="form-label">Temperatura:</label>
+            <input type="number" class="form-control" name="temperatura" [(ngModel)]="temperatura" [readonly]="readonly">
+          </div>
+          <div class="mb-3">
+            <label for="presion" class="form-label">Presión:</label>
+            <input type="number" class="form-control" name="presion" [(ngModel)]="presion" [readonly]="readonly" >
+          </div>
+
+          <hr>
+
+          <div *ngIf="!readonly;else mostrarDinamicos">
+            <div class="row g-3 mb-3">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Caries" name="tituloDatoUno" [(ngModel)]="tituloDatoUno" [readonly]="readonly" >
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" placeholder="4" name="valorDatoUno" [(ngModel)]="valorDatoUno" [readonly]="readonly" >
+              </div>
+            </div>
   
+            <div class="row g-3 mb-3">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Caries" name="tituloDatoDos" [(ngModel)]="tituloDatoDos" [readonly]="readonly" >
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" placeholder="4" name="valorDatoDos" [(ngModel)]="valorDatoDos" [readonly]="readonly" >
+              </div>
+            </div>
+  
+            <div class="row g-3 mb-3">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Caries" name="tituloDatoTres" [(ngModel)]="tituloDatoTres" [readonly]="readonly">
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" placeholder="4" name="valorDatoTres" [(ngModel)]="valorDatoTres" [readonly]="readonly">
+              </div>
+            </div>
+          </div>
+
+          <ng-template #mostrarDinamicos>
+            <div *ngIf="tituloDatoUno" class="row g-3 mb-3">
+               <div class="col">
+                <input type="text" class="form-control" name="tituloDatoUno" [(ngModel)]="tituloDatoUno" [readonly]="readonly">
+               </div>
+               <div class="col">
+                <input type="text" class="form-control" name="valorDatoUno" [(ngModel)]="valorDatoUno" [readonly]="readonly">
+               </div>
+            </div>
+  
+            <div *ngIf="tituloDatoDos" class="row g-3 mb-3">
+              <div class="col">
+                <input type="text" class="form-control" name="tituloDatoDos" [(ngModel)]="tituloDatoDos" [readonly]="readonly">
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" name="valorDatoDos" [(ngModel)]="valorDatoDos" [readonly]="readonly">
+              </div>
+            </div>
+  
+            <div *ngIf="tituloDatoTres" class="row g-3 mb-3">
+              <div class="col">
+                <input type="text" class="form-control" name="tituloDatoTres" [(ngModel)]="tituloDatoTres" [readonly]="readonly">
+              </div>
+               <div class="col">
+                <input type="text" class="form-control" name="valorDatoTres" [(ngModel)]="valorDatoTres" [readonly]="readonly">
+               </div>
+            </div>
+          </ng-template>
+          
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" 
@@ -46,19 +124,19 @@
   
     <div class="col-md-3 border border-dark mx-2 p-3">
       <h5>Buscar por:</h5>
-      <button class="btn btn-warning m-2" (click)="mostrarEspecialidades()">Especialidad</button>
-      <button class="btn btn-warning m-2" (click)="mostrarPacientes()">Pacientes</button>
+      <button class="btn btn-warning m-2 roll-in-left" (click)="mostrarEspecialidades()">Especialidad</button>
+      <button class="btn btn-warning m-2 roll-in-left" (click)="mostrarPacientes()">Pacientes</button>
     </div>
   
     <div *ngIf="divEspecialidades" class="col-md-2 border border-dark mx-2 p-3">
       <h4>Especialidades</h4>
-      <button *ngFor="let esp of especialistaActual.especialidad" class="btn btn-warning m-2"
+      <button *ngFor="let esp of especialistaActual.especialidad" class="btn btn-warning m-2 roll-in-left"
         (click)="mostrarTurnosPorEspecialidades(esp)">{{ esp }}</button>
     </div>
   
     <div *ngIf="divPacientes" class="col-md-2 border border-dark mx-2 p-3">
       <h4>Pacientes</h4>
-      <button *ngFor="let paciente of arrayFiltroPacientes" class="btn btn-warning m-2"
+      <button *ngFor="let paciente of arrayFiltroPacientes" class="btn btn-warning m-2 roll-in-left"
         (click)="mostrarTurnosPorPaciente(paciente)">{{ paciente }}</button>
     </div>
   

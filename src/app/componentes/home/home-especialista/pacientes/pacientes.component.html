@@ -1,0 +1,10 @@
+<div *ngIf="divPacientes" class="col border border-dark mx-2 p-3">
+    <h4>Pacientes:</h4>
+    <button *ngFor="let pac of arrayPacientesAMostrar" class="btn btn-warning m-2" (click)="verHistorialPaciente(pac)">{{ pac.nombre_paciente }}</button>
+</div>
+
+<hr>
+
+<app-historia-clinica [id_paciente]="id_pacienteSeleccionado"></app-historia-clinica>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

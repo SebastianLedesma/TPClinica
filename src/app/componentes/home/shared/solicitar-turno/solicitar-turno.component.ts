@@ -9,6 +9,7 @@ import { TurnoReservado } from '../../clases/turno-reservado.component.class';
 import { AuthService } from 'src/app/componentes/registro/services/auth.service';
 import { EstadoTurnoService } from 'src/app/componentes/services/estado-turno.service';
 import { setDoc, Timestamp, Firestore, doc } from '@angular/fire/firestore';
+import { getDownloadURL, ref, Storage } from '@angular/fire/storage';
 
 
 @Component({
@@ -18,8 +19,10 @@ import { setDoc, Timestamp, Firestore, doc } from '@angular/fire/firestore';
 })
 export class SolicitarTurnoComponent implements OnInit {
 
-  uidPaciente:string='';
-  pacienteLogueado:Paciente=new Paciente();
+  arrayIconos:any[]=[];
+
+  uidPaciente: string = '';
+  pacienteLogueado: Paciente = new Paciente();
 
   turnosDisponibles: any[] = [];
   especialidades: string[] = [];
@@ -41,22 +44,24 @@ export class SolicitarTurnoComponent implements OnInit {
   turnoSeleccionado: any;
   turnoReservado!: TurnoReservado;
 
-  constructor(private fireStoreService: FirestoreService, private spinnerService: SpinnerService, private router: Router, private authService: AuthService,private estadoTurnoService:EstadoTurnoService,private firestore:Firestore) { }
+  ArrayImagenesEspecialistas: any[] = [];
+
+  constructor(private fireStoreService: FirestoreService, private spinnerService: SpinnerService, private router: Router, private authService: AuthService, private estadoTurnoService: EstadoTurnoService, private firestore: Firestore, private storage: Storage) { }
 
   ngOnInit() {
 
     this.spinnerService.mostrarSpinner();
 
-    if(this.router.url.includes('paciente')){
+    if (this.router.url.includes('paciente')) {
       this.authService.getInfoUsuarioLogueado()
-      .subscribe(resp => {
-        localStorage.setItem('id_paciente',resp?.uid!);
+        .subscribe(resp => {
+          localStorage.setItem('id_paciente', resp?.uid!);
 
-        this.fireStoreService.obtenerDoc('pacientes',resp?.uid!)
-        .then(resp => {
-          this.pacienteLogueado = resp.data()!;
+          this.fireStoreService.obtenerDoc('pacientes', resp?.uid!)
+            .then(resp => {
+              this.pacienteLogueado = resp.data()!;
+            })
         })
-      })
     }
 
     this.fireStoreService.obtenerDocs('turnos_disponibles')
@@ -64,19 +69,27 @@ export class SolicitarTurnoComponent implements OnInit {
         this.turnosDisponibles = resp;
       });
 
-    this.fireStoreService.obtenerDoc('especialidadesDisponibles', 'sF2ILmsvdrWuY1Y4Pujy')
-      .then(resp => {
-        this.especialidades = resp.data()?.['especialidades'];
-        this.spinnerService.ocultarSpinner();
-      });
-
     this.fireStoreService.obtenerDocs('especialistas')
       .subscribe(resp => {
         this.spinnerService.ocultarSpinner();
         this.especialistas = resp.filter(esp => esp.habilitado === true);
-      })
-    ;
+        for (let index = 0; index < this.especialistas.length; index++) {
+          let element = this.especialistas[index];
+          this.obtenerImagenes(`${element.nombre} ${element.apellido}`, element.imagenUno!, element.id!);
+        }
 
+      })
+      ;
+
+  }
+
+  obtenerImagenes(nombreEspecialista: string, nombreImgen: string, id_esp: string) {
+    const imgRef = ref(this.storage, `especialistas/${nombreImgen}`);
+
+    getDownloadURL(imgRef)
+      .then(url => {
+        this.ArrayImagenesEspecialistas.push({ 'especialista': nombreEspecialista, 'imagen': url, 'id': id_esp });
+      })
   }
 
 
@@ -88,23 +101,59 @@ export class SolicitarTurnoComponent implements OnInit {
     this.especialistasAMostrar = this.especialistas.filter(esp => esp.especialidad?.includes(filtroEspecialidad));
   }
 
+  mostrarEspecialidades(esp: any) {
+    this.arrayIconos=[];
+    this.turnosAMostrar=[];
+    this.divTurnos=false;
+    let indice = 0;
+    for (let index = 0; index < this.especialistas.length; index++) {
+      const element = this.especialistas[index];
+      if (element.id === esp.id) {
+        indice = index;
+        break;
+      }
+    }
 
-  mostrarTurnos(especialista: Especialista) {
-    console.log(this.turnosDisponibles);
+    this.especialidades = this.especialistas[indice].especialidad!;
+    this.especialistaSeleccionado = this.especialistas[indice];
+
+    for (let index = 0; index < this.especialidades.length; index++) {
+      const element = this.especialidades[index];
+      if(element === 'cardiologia'){
+        this.arrayIconos.push({'especialidad':element,'icono': './../../../../../assets/imagenes/cardiologia.png'});
+      }else if(element === 'otorrino'){
+        this.arrayIconos.push({'especialidad':element,'icono': './../../../../../assets/imagenes/otorrino.png'});
+      }else if(element === 'pediatria'){
+        this.arrayIconos.push({'especialidad':element,'icono': './../../../../../assets/imagenes/pediatra.png'});
+      }else if(element === 'traumatologia'){
+        this.arrayIconos.push({'especialidad':element,'icono': './../../../../../assets/imagenes/traumatologia.png'});
+      }else {
+        this.arrayIconos.push({'especialidad':element,'icono': './../../../../../assets/imagenes/medico-clinico.png'});
+      }
+      
+    }
+
+    console.log(this.especialidades);
+  }
+
+
+  mostrarTurnos(especialidad: string) {
+    this.especialidadElegida = especialidad;
     this.turnosAMostrar = [];
-    this.especialistaSeleccionado = especialista;
     this.divTurnos = true;
     let fechaDeHoy = new Date();
 
     this.turnosAMostrar = this.turnosDisponibles.filter(turno => {
+      //console.log(turno.fecha);
+      if (turno.especialidad?.toLocaleLowerCase() === especialidad && turno.nombreEspecialista === `${this.especialistaSeleccionado.nombre} ${this.especialistaSeleccionado.apellido}`) {
 
-      if (turno.especialidad?.toLocaleLowerCase() === this.especialidadElegida.toLocaleLowerCase() && turno.nombreEspecialista === `${especialista.nombre} ${especialista.apellido}`) {
-        let fechaTimeStamp = turno.fecha!;
-        let date = new Timestamp(parseInt(fechaTimeStamp.toString().substring(18, fechaTimeStamp.toString().indexOf(','))), 0).toDate();
-        turno.fecha = date;
-        let dias = Math.ceil((date.getTime() - fechaDeHoy.getTime()) / 1000 / 60 / 60 / 24);
-        // console.log(dias);
+        if (!(turno.fecha instanceof Date)) {
+          let date = new Date(turno.fecha.seconds * 1000);
+          turno.fecha = date;
+        }
 
+        let dias = Math.ceil((turno.fecha.getTime() - fechaDeHoy.getTime()) / 1000 / 60 / 60 / 24);
+        //console.log(turno.fecha);
         if (dias <= 15) {
           return true;
         } else {
@@ -116,12 +165,11 @@ export class SolicitarTurnoComponent implements OnInit {
       }
 
     })
-    //console.log(this.turnosAMostrar);
   }
 
   verTurno(turno: any) {
     this.turnoSeleccionado = turno;
-    
+
     if (this.router.url.includes('admin')) {
       this.divPacientes = true;
 
@@ -144,7 +192,7 @@ export class SolicitarTurnoComponent implements OnInit {
 
   crearTurnoReservado(paciente?: Paciente) {
     let id: string = '';
-    let nombrePaciente:string='';
+    let nombrePaciente: string = '';
     if (paciente) {
       id = paciente.id!;
       nombrePaciente = `${paciente.nombre} ${paciente.apellido}`;
@@ -168,11 +216,11 @@ export class SolicitarTurnoComponent implements OnInit {
     return turnoReservado;
   }
 
-  guardarTurno(paciente?:Paciente) {
-    let id:string='';
-    let nombrePaciente:string='';
+  guardarTurno(paciente?: Paciente) {
+    let id: string = '';
+    let nombrePaciente: string = '';
     this.spinnerService.mostrarSpinner();
-    
+
     const turno = this.crearTurnoReservado(paciente);
 
     this.fireStoreService.agregarDoc(turno, 'turnos_reservados', this.turnoSeleccionado.id)
@@ -180,33 +228,33 @@ export class SolicitarTurnoComponent implements OnInit {
         console.log('turno reservado');
 
         this.estadoTurnoService.cambiarAReservado(this.turnoSeleccionado.id)
-        .then(update => {
-          console.log('actualizado');
+          .then(update => {
+            console.log('actualizado');
 
-          this.estadoTurnoService.borrarTurno('turnos_disponibles',this.turnoSeleccionado.id)
-          .then(resp => {
-            this.spinnerService.ocultarSpinner();
-            console.log('borrado');
+            this.estadoTurnoService.borrarTurno('turnos_disponibles', this.turnoSeleccionado.id)
+              .then(resp => {
+                this.spinnerService.ocultarSpinner();
+                console.log('borrado');
+              })
+              .catch(error => {
+                this.spinnerService.ocultarSpinner();
+                console.log(error);
+              });
+
           })
           .catch(error => {
             this.spinnerService.ocultarSpinner();
             console.log(error);
           });
 
-        })
-        .catch(error => {
-          this.spinnerService.ocultarSpinner();
-          console.log(error);
-        });
-
       })
-      .catch(error =>{
+      .catch(error => {
         this.spinnerService.ocultarSpinner();
         console.log(error)
       });
-    
-      this.divTurnos=false;
-      this.divPacientes=false;
+
+    this.divTurnos = false;
+    this.divPacientes = false;
   }
 
 }

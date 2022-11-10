@@ -35,43 +35,43 @@
                 </div>
                 <p class="mt-3 text-center">No tenés cuenta? <a class="text-dark" routerLink="/registro">Registrate</a></p>
             </form>
-    
+            <!-- ./../../../../assets/imagenes/paciente.png -->
     
             <div class="row m-auto">
                 <div class="row mt-2 mx-auto">
                     <div class="col">
-                        <a (click)="cargarDatos('admin')" class="btn btn-primary"><img class="img-fluid"
-                                src="./../../../../assets/imagenes/admin.png"
+                        <a (click)="cargarDatos('admin')" class="btn btn-primary roll-in-blurred-left"><img class="img-fluid"
+                                [src]="urlImagenAdmin"
                                 alt="Imagen de administrador">Administrador</a>
                     </div>
                     <div class="col">
-                        <a (click)="cargarDatos('paciente','4')" class="btn btn-dark"><img class="img-fluid"
-                                src="./../../../../assets/imagenes/paciente.png" alt="Imagen de paciente"><br>Paciente Ricardo
+                        <a (click)="cargarDatos('paciente','4')" class="btn btn-dark roll-in-blurred-left"><img class="img-fluid"
+                                [src]="urlImagenRicardo" alt="Imagen de paciente"><br>Paciente Ricardo
                             Ledesma</a>
                     </div>
                     <div class="col">
-                        <a (click)="cargarDatos('paciente','5')" class="btn btn-dark"><img class="img-fluid"
-                                src="./../../../../assets/imagenes/pacienteMujer.png" alt="Imagen de paciente"><br>Paciente Maria
+                        <a (click)="cargarDatos('paciente','5')" class="btn btn-dark roll-in-blurred-left"><img class="img-fluid"
+                                [src]="urlImagenMaria" alt="Imagen de paciente"><br>Paciente Maria
                             Gómez</a>
                     </div>
                     <div class="col">
-                        <a (click)="cargarDatos('paciente','6')" class="btn btn-dark"><img class="img-fluid"
-                                src="./../../../../assets/imagenes/pacienteHombre.png" alt="Imagen de paciente"><br>Paciente Juan
+                        <a (click)="cargarDatos('paciente','6')" class="btn btn-dark roll-in-blurred-right"><img class="img-fluid"
+                                [src]="urlImagenJuan" alt="Imagen de paciente"><br>Paciente Juan
                             Pérez</a>
                     </div>
                     <div class="col">
-                        <a (click)="cargarDatos('especialista','1')" class="btn btn-danger"><img class="img-fluid"
-                                src="./../../../../assets/imagenes/tito_gomez.png" alt="Imagen de especialista"><br>Especialista Tito
+                        <a (click)="cargarDatos('especialista','1')" class="btn btn-danger roll-in-blurred-right"><img class="img-fluid"
+                                [src]="urlImagenTito" alt="Imagen de especialista"><br>Especialista Tito
                             Gomez</a>
                     </div>
                     <div class="col">
-                        <a (click)="cargarDatos('especialista','2')" class="btn btn-danger"><img class="img-fluid"
-                                src="./../../../../assets/imagenes/doctora.png" alt="Imagen de especialista"><br>Especialista Laura
+                        <a (click)="cargarDatos('especialista','2')" class="btn btn-danger roll-in-blurred-right"><img class="img-fluid"
+                                [src]="urlImagenLaura" alt="Imagen de especialista"><br>Especialista Laura
                             Diaz</a>
                     </div>
                     <div class="col">
-                        <a (click)="cargarDatos('especialista','3')" class="btn btn-danger"><img class="img-fluid"
-                                src="./../../../../assets/imagenes/doctor.png" alt="Imagen de especialista"><br>Especialista Darío
+                        <a (click)="cargarDatos('especialista','3')" class="btn btn-danger roll-in-blurred-right"><img class="img-fluid"
+                                [src]="urlImagenDario" alt="Imagen de especialista"><br>Especialista Darío
                             Gonzalez</a>
                     </div>
                 </div>

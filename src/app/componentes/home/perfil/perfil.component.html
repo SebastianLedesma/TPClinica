@@ -40,7 +40,10 @@
             <img [src]="urlImagenDos" alt="Imagen de perfil dos">
         </div>
         
-        
+        <div *ngIf="mostrarHistoria" class="border border-dark mx-auto">
+            <app-historia-clinica [id_paciente]="uidUsuario"></app-historia-clinica>
+        </div>
+
     </div>
 </div>
 

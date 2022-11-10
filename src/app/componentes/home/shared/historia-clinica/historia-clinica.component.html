@@ -1,0 +1,49 @@
+<div *ngIf="turnosFinalizados.length > 0;else noHayDatos" class="row mx-2 p-3 mx-auto">
+    <h4>Historial de {{ paciente.nombre }} {{ paciente.apellido }}</h4>
+    <button *ngIf="mostrarBotonPDF" class="btn btn-dark" (click)="descargarPDF()">Descargar historia clínica</button>
+    <div *ngFor="let turno of turnosFinalizados" class="row g-3">
+        <strong>Atendida/o el {{ turno.fecha | date:'dd/MM HH:mm' }} por {{ turno.nombreEspecialista }}</strong>
+        <div class="col-md-3">
+            <label for="especialidad" class="form-label">Especialidad</label>
+            <input type="text" class="form-control" id="especialidad" readonly [value]="turno.especialidad">            
+        </div>
+        <div class="col-md-3">
+            <label for="altura" class="form-label">Altura</label>
+            <input type="text" class="form-control" id="altura" readonly [value]="turno.altura">            
+        </div>
+        <div class="col-md-3">
+            <label for="peso" class="form-label">Peso</label>
+            <input type="text" class="form-control" id="peso" readonly [value]="turno.peso">
+        </div>
+        <div class="col-md-3">
+            <label for="temperatura" class="form-label">Temperatura</label>
+            <input type="number" class="form-control" id="temperatura" readonly [value]="turno.temperatura">
+        </div>
+        <div class="col-md-3">
+            <label for="presion" class="form-label">Presión</label>
+            <input type="text" class="form-control" id="presion" readonly [value]="turno.presion">
+        </div>
+        <div *ngIf="turno.datos_dinamicos[0]" class="col-md-3">
+            <label for="claveUno" class="form-label">{{ turno.datos_dinamicos[0].clave }}</label>
+            <input type="text" class="form-control" id="claveUno" readonly [value]="turno.datos_dinamicos[0].valor">
+        </div>
+        <div *ngIf="turno.datos_dinamicos[1]" class="col-md-3">
+            <label for="claveDos" class="form-label">{{ turno.datos_dinamicos[1].clave }}</label>
+            <input type="text" class="form-control" id="claveDos" readonly [value]="turno.datos_dinamicos[1].valor">
+        </div>
+        <div *ngIf="turno.datos_dinamicos[2]" class="col-md-3">
+            <label for="claveTres" class="form-label">{{ turno.datos_dinamicos[2].clave }}</label>
+            <input type="text" class="form-control" id="claveTres" readonly [value]="turno.datos_dinamicos[2].valor">
+        </div>
+
+        <hr>
+
+    </div>
+</div>
+
+<ng-template #noHayDatos>
+    <h4>No hay historia clinica para {{ paciente.nombre }} {{ paciente.apellido }}</h4>
+</ng-template>
+
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
