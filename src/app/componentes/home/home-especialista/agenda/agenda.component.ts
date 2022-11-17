@@ -47,14 +47,14 @@ export class AgendaComponent implements OnInit {
   arraDeTurnos: Date[] = [];
 
 
-  constructor(private fb: FormBuilder, private fireStore: FirestoreService, private especialistaService: EspecialistaService, private authService: AuthService, private spinnerService: SpinnerService, private router:Router) { }
+  constructor(private fb: FormBuilder, private fireStore: FirestoreService, private especialistaService: EspecialistaService, private authService: AuthService, private spinnerService: SpinnerService, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
     const resp = (await this.especialistaService.obtenerDoc('especialistas', this.authService.getIdUsuario()!)).data();
 
     if (resp) {
       this.especialista = resp;
-      
+
     }
 
   }
@@ -74,7 +74,7 @@ export class AgendaComponent implements OnInit {
     console.log(fechaInicio);
     console.log(fechaFinal);
     let diasATrabajar = Math.ceil(dias);
-   
+
     if (dias > 30) {
       console.log('Solo puede agendar hasta un mes de turnos.');
     } else {
@@ -140,7 +140,28 @@ export class AgendaComponent implements OnInit {
       this.router.navigate(['home/especialista']);
     }, 3000);
 
-    
+    this.agregarTurnos(turnoDisponible.especialidad);
+  }
+
+
+  async agregarTurnos(especialidad:string) {
+    const registros = (await this.fireStore.obtenerDoc('contador_por_especialidad', '6qoiDPDpaL4rFm5LgSuT')).data();
+
+    if (registros) {
+      let fechaHoy = new Date;
+      let turnosRegistro:any[] = registros['turnos'];
+      //registroLog.push({ email: this.formulario.get('mail').value, fecha: fechaHoy, rol: perfil });
+
+      turnosRegistro = turnosRegistro.map(valor =>{
+        if(valor.especialidad === especialidad){
+          valor.cantidad += this.arraDeTurnos.length;
+        }
+        return valor;
+      })
+      this.fireStore.agregarDoc({ turnos: turnosRegistro }, 'contador_por_especialidad', '6qoiDPDpaL4rFm5LgSuT')
+        .catch(error => console.log(error));
+
+    }
   }
 
 

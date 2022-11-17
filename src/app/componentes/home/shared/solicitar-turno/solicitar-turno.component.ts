@@ -72,7 +72,10 @@ export class SolicitarTurnoComponent implements OnInit {
     this.fireStoreService.obtenerDocs('especialistas')
       .subscribe(resp => {
         this.spinnerService.ocultarSpinner();
+        this.ArrayImagenesEspecialistas=[];
+        this.especialistas=[];
         this.especialistas = resp.filter(esp => esp.habilitado === true);
+        console.log(this.especialistas);
         for (let index = 0; index < this.especialistas.length; index++) {
           let element = this.especialistas[index];
           this.obtenerImagenes(`${element.nombre} ${element.apellido}`, element.imagenUno!, element.id!);
@@ -133,7 +136,7 @@ export class SolicitarTurnoComponent implements OnInit {
       
     }
 
-    console.log(this.especialidades);
+    //console.log(this.especialidades);
   }
 
 
@@ -255,6 +258,26 @@ export class SolicitarTurnoComponent implements OnInit {
 
     this.divTurnos = false;
     this.divPacientes = false;
+    this.actualizarTurnos(this.especialidadElegida);
+  }
+
+
+  async actualizarTurnos(especialidad:string) {
+    const registros = (await this.fireStoreService.obtenerDoc('contador_por_especialidad', '6qoiDPDpaL4rFm5LgSuT')).data();
+
+    if (registros) {
+      let turnosRegistro:any[] = registros['turnos'];
+
+      turnosRegistro = turnosRegistro.map(valor =>{
+        if(valor.especialidad === especialidad){
+          valor.cantidad -= 1;
+        }
+        return valor;
+      })
+      this.fireStoreService.agregarDoc({ turnos: turnosRegistro }, 'contador_por_especialidad', '6qoiDPDpaL4rFm5LgSuT')
+        .catch(error => console.log(error));
+
+    }
   }
 
 }

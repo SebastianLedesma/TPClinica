@@ -39,6 +39,7 @@ export class AuthService {
   }
 
   logOut(){
+    localStorage.setItem('id_paciente','');
     this.authService.signOut();
   }
 

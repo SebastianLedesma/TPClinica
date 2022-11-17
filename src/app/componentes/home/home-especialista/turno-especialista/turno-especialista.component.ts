@@ -429,6 +429,8 @@ export class TurnoEspecialistaComponent implements OnInit {
         this.spinnerService.ocultarSpinner();
         console.log(error)
       })
+
+      this.actualizarTurnos(turnoAceptadoo.especialidad);
   }
 
 
@@ -482,6 +484,8 @@ export class TurnoEspecialistaComponent implements OnInit {
         this.closePopup();
         this.mostrarTabla = false;
       });
+
+      this.actualizarTurnos(turnoCancelado.especialidad);
   }
 
 
@@ -520,6 +524,8 @@ export class TurnoEspecialistaComponent implements OnInit {
       .finally(() => {
         this.mostrarTabla = false;
       });
+
+      this.actualizarTurnos(turnoRechazado.especialidad);
   }
 
 
@@ -598,6 +604,28 @@ export class TurnoEspecialistaComponent implements OnInit {
         this.spinnerService.ocultarSpinner();
         console.log(error);
       });
+
+      this.actualizarTurnos(turnoFinalizado.especialidad);
+  }
+
+  async actualizarTurnos(especialidad:string) {
+    const registros = (await this.fireStoreService.obtenerDoc('contador_por_especialidad', '6qoiDPDpaL4rFm5LgSuT')).data();
+
+    if (registros) {
+      let fechaHoy = new Date;
+      let turnosRegistro:any[] = registros['turnos'];
+      //registroLog.push({ email: this.formulario.get('mail').value, fecha: fechaHoy, rol: perfil });
+
+      turnosRegistro = turnosRegistro.map(valor =>{
+        if(valor.especialidad === especialidad){
+          valor.cantidad -= 1;
+        }
+        return valor;
+      })
+      this.fireStoreService.agregarDoc({ turnos: turnosRegistro }, 'contador_por_especialidad', '6qoiDPDpaL4rFm5LgSuT')
+        .catch(error => console.log(error));
+
+    }
   }
 
 }

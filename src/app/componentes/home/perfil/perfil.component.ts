@@ -15,6 +15,10 @@ export class PerfilComponent implements OnInit {
   url: string = '';
 
   uidUsuario:string='';
+  datosAEnviar = {
+    especialista:'',
+    id_paciente:''
+  };
 
   turnosFinalizados: any[] = [];
   nombre: string = '';
@@ -28,6 +32,8 @@ export class PerfilComponent implements OnInit {
   urlImgenUno: string = '';
   urlImagenDos: string = '';
   obraSocial: string = '';
+
+  arrayEspecialistas:string[]=[];
 
   mostrarHistoria: boolean = false;
 
@@ -43,6 +49,7 @@ export class PerfilComponent implements OnInit {
     this.authService.getInfoUsuarioLogueado()
       .subscribe(resp => {
 
+        localStorage.setItem('id_paciente',resp.uid);
         this.uidUsuario = resp?.uid!;
 
         if (this.uidUsuario) {
@@ -62,7 +69,7 @@ export class PerfilComponent implements OnInit {
 
   async obtenerUsuario(nombreCollection: string, uid: string) {
     const resp = (await this.firestoreService.obtenerDoc(nombreCollection, uid)).data();
-
+    console.log(uid);
     if (resp) {
       this.nombre = resp?.['nombre'];
       this.apellido = resp?.['apellido'];
@@ -81,9 +88,15 @@ export class PerfilComponent implements OnInit {
 
         this.firestoreService.obtenerDocs('diagnostico_turnos')
           .subscribe(resp => {
+            this.arrayEspecialistas=[];
+
             this.turnosFinalizados = resp.filter(turnoFinalizado => {
 
               if (turnoFinalizado.nombre_paciente === `${this.nombre} ${this.apellido}`) {
+                if(!this.arrayEspecialistas.includes(turnoFinalizado.nombreEspecialista)){
+                  this.arrayEspecialistas.push(turnoFinalizado.nombreEspecialista);
+                }
+
                 return true;
               } else {
                 return false;
@@ -116,4 +129,11 @@ export class PerfilComponent implements OnInit {
       })
   }
 
+  seleccionarEspecialista(especialista:string){
+    this.datosAEnviar ={
+      especialista: especialista,
+      id_paciente : localStorage.getItem('id_paciente')
+    }
+    //console.log(especialista);
+  }
 }

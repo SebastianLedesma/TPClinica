@@ -31,7 +31,7 @@
 </div>
 
 <div class="row">
-    <h4>Ver turnos</h4>
+    <h4 asistenteDeVoz>Aquí puede ver los turnos.</h4>
   
     <div class="col-md-3 border border-dark mx-2 p-3">
       <h5>Buscar por:</h5>
@@ -51,10 +51,12 @@
         (click)="mostrarTurnosPorEspecialista(especialista)">{{ especialista }}</button>
     </div>
   
-    <table *ngIf="mostrarTabla" class="table w-75">
+    <table *ngIf="mostrarTabla" class="table">
       <thead>
         <tr>
           <th scope="col">Fecha</th>
+          <th scope="col">Dia de la semana</th>
+          <th scope="col">Mes</th>
           <th scope="col">Especialidad</th>
           <th scope="col">Especialista</th>
           <th scope="col">Estado</th>
@@ -62,44 +64,56 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let turno of turnosDisponiblesAMostrar">
+        <tr *ngFor="let turno of turnosDisponiblesAMostrar" resaltador>
             <td>{{ turno.fecha | date:'short' }}</td>
+            <td>{{ turno.fecha | diaEnEspaniol }}</td>
+            <td>{{ turno.fecha | mesEnEspaniol }}</td>
             <td>{{ turno.especialidad }}</td>
             <td>{{ turno.nombreEspecialista }}</td>
             <td><strong>Disponible</strong></td>
             <td><button class="btn btn-danger" (click)="openDivResenia(turno,'turnos_disponibles')">Cancelar</button></td>
           </tr>
-        <tr *ngFor="let turno of turnosReservadosAMostrar">
+        <tr *ngFor="let turno of turnosReservadosAMostrar" resaltador>
           <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.fecha | diaEnEspaniol }}</td>
+          <td>{{ turno.fecha | mesEnEspaniol }}</td>
           <td>{{ turno.especialidad }}</td>
           <td>{{ turno.nombreEspecialista }}</td>
           <td><strong>Reservado</strong></td>
           <td><button class="btn btn-danger" (click)="openDivResenia(turno,'turnos_reservados')">Cancelar</button></td>
         </tr>
   
-        <tr *ngFor="let turno of turnosAceptadosAMostrar">
+        <tr *ngFor="let turno of turnosAceptadosAMostrar" resaltador>
           <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.fecha | diaEnEspaniol }}</td>
+          <td>{{ turno.fecha | mesEnEspaniol }}</td>
           <td>{{ turno.especialidad }}</td>
           <td>{{ turno.nombreEspecialista }}</td>
           <td><strong>Aceptado</strong></td>
         </tr>
   
-        <tr *ngFor="let turno of turnosRechazadosAMostrar">
+        <tr *ngFor="let turno of turnosRechazadosAMostrar" resaltador>
           <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.fecha | diaEnEspaniol }}</td>
+          <td>{{ turno.fecha | mesEnEspaniol }}</td>
           <td>{{ turno.especialidad }}</td>
           <td>{{ turno.nombreEspecialista }}</td>
           <td><strong>Rechazado</strong></td>
         </tr>
   
-        <tr *ngFor="let turno of turnosCanceladosAMostrar">
+        <tr *ngFor="let turno of turnosCanceladosAMostrar" resaltador>
           <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.fecha | diaEnEspaniol }}</td>
+          <td>{{ turno.fecha | mesEnEspaniol }}</td>
           <td>{{ turno.especialidad }}</td>
           <td>{{ turno.nombreEspecialista }}</td>
           <td><strong>Cancelado</strong></td>
         </tr>
   
-        <tr *ngFor="let turno of turnosFinalizadosAMostrar">
+        <tr *ngFor="let turno of turnosFinalizadosAMostrar" resaltador>
           <td>{{ turno.fecha | date:'short' }}</td>
+          <td>{{ turno.fecha | diaEnEspaniol }}</td>
+          <td>{{ turno.fecha | mesEnEspaniol }}</td>
           <td>{{ turno.especialidad }}</td>
           <td>{{ turno.nombreEspecialista }}</td>
           <td><strong>Finalizado</strong></td>

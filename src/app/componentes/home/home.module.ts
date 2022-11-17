@@ -19,6 +19,13 @@ import { TurnoEspecialistaComponent } from './home-especialista/turno-especialis
 import { HistoriaClinicaComponent } from './shared/historia-clinica/historia-clinica.component';
 import { UsuariosComponent } from './home-admin/usuarios/usuarios.component';
 import { PacientesComponent } from './home-especialista/pacientes/pacientes.component';
+import { ColorButtonDirective } from './directives/color-button.directive';
+import { DiaEnEspaniolPipe } from './pipes/dia-en-espaniol.pipe';
+import { MesEnEspaniolPipe } from './pipes/mes-en-espaniol.pipe';
+import { NombreAbreviadoPipe } from './pipes/nombre-abreviado.pipe';
+import { ResaltarDirective } from './directives/resaltar.directive';
+import { AsistenteDirective } from './directives/asistente.directive';
+import { InformesComponent } from './home-admin/informes/informes.component';
 
 
 
@@ -39,7 +46,14 @@ import { PacientesComponent } from './home-especialista/pacientes/pacientes.comp
     TurnoEspecialistaComponent,
     HistoriaClinicaComponent,
     UsuariosComponent,
-    PacientesComponent
+    PacientesComponent,
+    ColorButtonDirective,
+    DiaEnEspaniolPipe,
+    MesEnEspaniolPipe,
+    NombreAbreviadoPipe,
+    ResaltarDirective,
+    AsistenteDirective,
+    InformesComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +63,9 @@ import { PacientesComponent } from './home-especialista/pacientes/pacientes.comp
     NgxSpinnerModule
   ],
   exports:[
-    UsuariosComponent
+    UsuariosComponent,
+    ColorButtonDirective,
+    AsistenteDirective
   ]
 })
 export class HomeModule { }

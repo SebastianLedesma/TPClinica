@@ -1,7 +1,9 @@
 <div *ngIf="turnosFinalizados.length > 0;else noHayDatos" class="row mx-2 p-3 mx-auto">
-    <h4>Historial de {{ paciente.nombre }} {{ paciente.apellido }}</h4>
+    <h4 asistenteDeVoz>Historial de {{ paciente.nombre }} {{ paciente.apellido }}</h4>
+    <button *ngIf="mostrarBotonExcel" class="btn btn-success" (click)="descargarExcel()">Descargar historia en Excel</button>
+    
     <button *ngIf="mostrarBotonPDF" class="btn btn-dark" (click)="descargarPDF()">Descargar historia clínica</button>
-    <div *ngFor="let turno of turnosFinalizados" class="row g-3">
+    <div *ngFor="let turno of turnosFinalizados" class="row g-3 bounce-in-right">
         <strong>Atendida/o el {{ turno.fecha | date:'dd/MM HH:mm' }} por {{ turno.nombreEspecialista }}</strong>
         <div class="col-md-3">
             <label for="especialidad" class="form-label">Especialidad</label>

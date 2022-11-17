@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col">
+        <h3 asistenteDeVoz>Elija un tipo de informe</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <button class="btn btn-success m-1" (click)="descargarLogUsuarios()">Descargar ingreso de usuarios</button>
+    </div>
+    <div class="col">
+        <button class="btn btn-primary m-1" (click)="descargarContadorTurnos()">Descargar cantidad de turnos por esp.</button>
+    </div>
+    <div class="col">
+        <button class="btn btn-warning m-1" (click)="verTurnosReservados()">Ver turnos reservados por esp.</button>
+    </div>
+    <div class="col">
+        <button class="btn btn-dark m-1" (click)="verTurnosFinalizados()">Ver turnos finalizados por esp.</button>
+    </div>
+</div>
+
+<div class="chart-container bg-light mx-auto mt-2" [ngStyle]="{'display':displayStyle}" style="width: 800px; height: 600px;">
+    <canvas id="my-chart-reservados">
+    </canvas>
+</div>
+
+<div class="chart-container bg-light mx-auto mt-2" [ngStyle]="{'display':displayStyleFinalizados}" style="width: 800px; height: 600px;">
+    <canvas id="my-chart-finalizados">
+    </canvas>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+  
+  

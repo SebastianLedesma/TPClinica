@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { collection, collectionData, doc, Firestore, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
+import { collection, collectionData, doc, Firestore, getDoc, getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Especialista } from '../clases/especialista.class';
 
@@ -37,6 +37,11 @@ export class FirestoreService {
     });
 
     return registros;
+  }
+
+  actualizar(registros:any,id:string){
+    const actualizarRef = doc(this._firestore,`log_ingresos/${id}`);
+    return updateDoc(actualizarRef,{...registros});
   }
   
 }

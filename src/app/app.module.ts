@@ -15,7 +15,6 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { HomePageComponent } from './componentes/home/home-page/home-page.component';
 import { CommonModule } from '@angular/common';
-import { InterceptorService } from './componentes/services/interceptor.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
@@ -39,7 +38,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
   schemas:[ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase },
-    // { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
   ],
   bootstrap: [AppComponent]
 })

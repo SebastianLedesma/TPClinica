@@ -18,6 +18,7 @@ import { TurnosAdminComponent } from './home-admin/turnos-admin/turnos-admin.com
 import { TurnoEspecialistaComponent } from './home-especialista/turno-especialista/turno-especialista.component';
 import { UsuariosComponent } from './home-admin/usuarios/usuarios.component';
 import { PacientesComponent } from './home-especialista/pacientes/pacientes.component';
+import { InformesComponent } from './home-admin/informes/informes.component';
 
 const routes:Routes=[
   {
@@ -51,6 +52,10 @@ const routes:Routes=[
           {
             path:'usuarios',
             component:UsuariosComponent
+          },
+          {
+            path:'informes',
+            component:InformesComponent
           }
         ]
       },

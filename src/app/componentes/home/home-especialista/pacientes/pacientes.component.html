@@ -1,10 +1,112 @@
+<div
+  class="modal slide-in-blurred-top"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Reseña</h4>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Motivo:</label>
+          <input type="text" class="form-control" [value]="resenia" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="altura" class="form-label">Altura en cm:</label>
+            <input type="number" class="form-control" name="altura" [value]="altura" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="peso" class="form-label">Peso en Kg:</label>
+            <input type="number" class="form-control" name="peso" [value]="peso" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="temperatura" class="form-label">Temperatura:</label>
+            <input type="number" class="form-control" name="temperatura" [value]="temperatura" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="presion" class="form-label">Presión:</label>
+            <input type="number" class="form-control" name="presion" [value]="presion" readonly>
+          </div>
+
+          <div *ngIf="tituloDatoUno" class="row g-3 mb-3">
+            <div class="col">
+             <input type="text" class="form-control" name="tituloDatoUno" [value]="tituloDatoUno" readonly>
+            </div>
+            <div class="col">
+             <input type="text" class="form-control" name="valorDatoUno" [value]="valorDatoUno" readonly>
+            </div>
+         </div>
+
+         <div *ngIf="tituloDatoDos" class="row g-3 mb-3">
+           <div class="col">
+             <input type="text" class="form-control" name="tituloDatoDos" [value]="tituloDatoDos" readonly>
+           </div>
+           <div class="col">
+             <input type="text" class="form-control" name="valorDatoDos" [value]="valorDatoDos" readonly>
+           </div>
+         </div>
+
+         <div *ngIf="tituloDatoTres" class="row g-3 mb-3">
+           <div class="col">
+             <input type="text" class="form-control" name="tituloDatoTres" [value]="tituloDatoTres" readonly>
+           </div>
+            <div class="col">
+             <input type="text" class="form-control" name="valorDatoTres" [value]="valorDatoTres" readonly>
+            </div>
+         </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" 
+                (click)="closePopup()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="divPacientes" class="col border border-dark mx-2 p-3">
     <h4>Pacientes:</h4>
-    <button *ngFor="let pac of arrayPacientesAMostrar" class="btn btn-warning m-2 roll-in-left" (click)="verHistorialPaciente(pac)">{{ pac.nombre_paciente }}</button>
+    <!-- <button *ngFor="let pac of arrayPacientesAMostrar" class="boton btn btn-warning m-2 roll-in-left" (click)="verAtenciones(pac)">{{ pac.nombre_paciente }}</button> -->
+    <a *ngFor="let pac of ArrayImagenesPacientes;" class="boton btn btn-primary m-1 flip-diagonal-2-br boton" (click)="verAtenciones(pac.paciente)"><img class="img-fluid"
+      [src]="pac.imagen"
+      alt="imagen de especialista"><br><b>{{ pac.paciente.nombre }} {{ pac.paciente.apellido }}</b></a>
 </div>
 
 <hr>
 
-<app-historia-clinica [id_paciente]="id_pacienteSeleccionado"></app-historia-clinica>
+<table *ngIf="mostrarTabla" class="table bounce-in-right">
+    <thead>
+      <tr>
+        <th scope="col">Fecha</th>
+        <th scope="col">Día de la semana</th>
+        <th scope="col">Mes</th>
+        <th scope="col">Especialidad</th>
+        <th scope="col">Especialista</th>
+        <th scope="col">Paciente</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let turno of arrayAtencionesPorPaciente" resaltador>
+        <td>{{ turno.fecha | date:'short' }}</td>
+        <td>{{ turno.fecha | diaEnEspaniol }}</td>
+        <td>{{ turno.fecha | mesEnEspaniol }}</td>
+        <td>{{ turno.especialidad }}</td>
+        <td>{{ turno.nombreEspecialista }}</td>
+        <td>{{ turno.nombre_paciente }}</td>
+        <td><strong>Finalizado</strong></td>
+        <td>
+          <button class="btn btn-success" (click)="verResenia(turno)">Ver reseña</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
 
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>

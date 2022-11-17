@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { url } from 'inspector';
 import { AuthService } from '../../registro/services/auth.service';
+import { FirestoreService } from '../../registro/services/firestore.service';
 import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
@@ -40,7 +41,7 @@ export class LoginPageComponent implements OnInit {
   usuarioPerfil:string='';
   mensaje:string='';
 
-  constructor(private fb: FormBuilder,private authService:AuthService,private router:Router, private spinnerService:SpinnerService,private storage: Storage) { }
+  constructor(private fb: FormBuilder,private authService:AuthService,private router:Router, private spinnerService:SpinnerService,private storage: Storage,private _firestoreService: FirestoreService) { }
 
 
   ngOnInit(): void {
@@ -52,7 +53,6 @@ export class LoginPageComponent implements OnInit {
     this.obtenerImagenes('especialistas','imagenUno_23232323_Gomez','tito');
     this.obtenerImagenes('especialistas','imagenUno_19435544_Diaz','laura');
     this.obtenerImagenes('especialistas','imagenUno_21211010_Gonzalez','dario');
-    console.log(this.urlImagenAdmin);
   }
 
   cargarDatos(perfil:string,id?:string){
@@ -70,6 +70,7 @@ export class LoginPageComponent implements OnInit {
   }
 
   async onSubmit(){
+    let perfil:string;
     this.mensaje = '';
     let mail:string = this.formulario.get('mail')?.value;
     let password:string = this.formulario.get('password')?.value;
@@ -78,48 +79,45 @@ export class LoginPageComponent implements OnInit {
       this.spinnerService.mostrarSpinner();
 
       this.authService.loginUsuario(mail,password)
-      .then( resp =>{
+      .then( async resp =>{
         if(resp.user){
-          // if(this.usuarioPerfil === 'admin'){
-          //   this.router.navigate(['home/admin']);
-  
-          // }else if(resp!.user?.emailVerified){
-  
-          //   if(this.usuarioPerfil === 'paciente'){
-          //     this.router.navigate(['home/paciente']);
-             
-          //   }else{
-          //     this.router.navigate(['home/especialista']);
-          //   }
-  
-          // }else{
-          //   this.router.navigate(['home/mail-no-verificado']);
-          //   this.spinnerService.ocultarSpinner();
-          // }
+          
           if(resp!.user?.emailVerified){
             
             if(this.usuarioPerfil === 'paciente'){
+              perfil='paciente';
               this.router.navigate(['home/paciente']);
-              //this.spinnerService.ocultarSpinner();
              
-            }else if(this.usuarioPerfil === 'especialista'){
+            }else if(this.usuarioPerfil === 'especialista' || this.formulario.get('mail').value === 'jpyuietrspltmgawwu@tmmwj.com'){
+              perfil='especialista'
               this.router.navigate(['home/especialista']);
             }else{
+              perfil='administrador';
               this.router.navigate(['home/admin']);
-              //this.spinnerService.ocultarSpinner();
             }
             
           }else{
             this.router.navigate(['home/mail-no-verificado']);
             this.spinnerService.ocultarSpinner();
           }
+
+          const registros = (await this._firestoreService.obtenerDoc('log_ingresos', 'tRnmct579pHa8O4tOHn6')).data();
+
+          if(registros){
+            let fechaHoy = new Date;
+            let registroLog = registros['ingresos'];
+            registroLog.push({email: this.formulario.get('mail').value , fecha: fechaHoy, rol: perfil});
+            this._firestoreService.agregarDoc({ingresos: registroLog},'log_ingresos','tRnmct579pHa8O4tOHn6')
+            .catch(error => console.log(error));
+            
+          }
+
           this.spinnerService.ocultarSpinner();
         }else{
           this.mensaje = 'No hay registros con estos datos.';
           this.spinnerService.ocultarSpinner();
         }
 
-        //this.spinnerService.ocultarSpinner();
       })
       .catch( error =>{
         this.mensaje = 'No hay registros con estos datos.';

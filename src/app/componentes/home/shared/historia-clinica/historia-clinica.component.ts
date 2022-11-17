@@ -6,7 +6,10 @@ import { Paciente } from '../../../registro/clases/paciente';
 import pdfMake from "pdfmake/build/pdfmake"; 
 import pdfFonts from "pdfmake/build/vfs_fonts";  
 import { Router } from '@angular/router';
-pdfMake.vfs = pdfFonts.pdfMake.vfs; 
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+import * as XLSX from 'xlsx';
+
 
 @Component({
   selector: 'app-historia-clinica',
@@ -15,11 +18,12 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class HistoriaClinicaComponent implements OnInit {
 
-  @Input() id_paciente:string= '';
+  @Input() datos:any;
   turnosFinalizados:any[]=[];
   paciente:Paciente = new Paciente();
 
   mostrarBotonPDF:boolean=false;
+  mostrarBotonExcel:boolean=false;
 
   constructor(private fireStoreService: FirestoreService, private spinnerService: SpinnerService, private router:Router) { }
 
@@ -27,19 +31,20 @@ export class HistoriaClinicaComponent implements OnInit {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    //console.log('dispara onchacnge.');
+    this.datos.id_paciente = localStorage.getItem('id_paciente') || '';
     this.mostrarBotonPDF=false;
     
-    if(this.id_paciente){
+    if(this.datos.id_paciente){
       this.spinnerService.mostrarSpinner();
-      //console.log(changes['id_paciente'].currentValue);
   
-      const resp = (await this.fireStoreService.obtenerDoc('pacientes',changes['id_paciente'].currentValue)).data();
+      const resp = (await this.fireStoreService.obtenerDoc('pacientes',changes['datos'].currentValue.id_paciente)).data();
   
       if(resp){
         this.paciente = resp;
       }
   
-      this.fireStoreService.obtenerDocsPorId('diagnostico_turnos',changes['id_paciente'].currentValue)
+      this.fireStoreService.obtenerDocsPorId('diagnostico_turnos',changes['datos'].currentValue.id_paciente)
       .then( (registros: any[]) => {
         this.turnosFinalizados = registros.map(turno => {
           let date = new Date(turno.fecha.seconds * 1000);
@@ -48,11 +53,24 @@ export class HistoriaClinicaComponent implements OnInit {
           return turno;
         });
 
+        this.turnosFinalizados = this.turnosFinalizados.filter(turno => {
+          if(changes['datos'].currentValue.especialista === ''){
+            return true;
+          }else if(turno.nombreEspecialista === changes['datos'].currentValue.especialista){
+            return true;
+          }
+          return false;
+        })
+
         if(this.turnosFinalizados.length && !this.router.url.includes('pacientes') && !this.router.url.includes('admin')){
           this.mostrarBotonPDF=true;
         }
+
+        if(this.turnosFinalizados.length && this.router.url.includes('admin')){
+          this.mostrarBotonExcel=true;
+        }
+        // console.log(this.turnosFinalizados);
         this.spinnerService.ocultarSpinner();
-        //this.puntajes = this.puntajes.sort((a:any,b:any) => b.puntaje - a.puntaje);
       })
     }
    
@@ -149,6 +167,18 @@ export class HistoriaClinicaComponent implements OnInit {
 
       img.src = url;
     });
+  }
+
+  descargarExcel(){
+    const nombreArchivo = `${this.paciente.apellido}${this.paciente.nombre}.xlsx`;
+    
+    console.log(this.turnosFinalizados);
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.turnosFinalizados);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    
+    XLSX.utils.book_append_sheet(wb,ws,`${this.paciente.apellido} ${this.paciente.nombre}`);
+
+    XLSX.writeFile(wb,nombreArchivo);
   }
 
 }

@@ -1,10 +1,10 @@
 <div class="row">
-
+    <h3 asistenteDeVoz>En esta sección puede pedir un turno.</h3>
     <h4>Especialistas</h4>
     <div class="col border border-dark mx-2 p-3">
-        <a *ngFor="let item of ArrayImagenesEspecialistas;" class="btn btn-primary m-1 flip-diagonal-2-br" (click)="mostrarEspecialidades(item)"><img class="img-fluid"
+        <a *ngFor="let item of ArrayImagenesEspecialistas;" class="btn btn-primary m-1 flip-diagonal-2-br boton" (click)="mostrarEspecialidades(item)"><img class="img-fluid"
             [src]="item.imagen"
-            alt="imagen de especialista"><br>{{ item.especialista }}</a>
+            alt="imagen de especialista"><br><b>{{ item.especialista | nombreAbreviado }}</b></a>
     </div>
 
     <div *ngIf="especialidades.length > 0" class="col-md-3 border border-dark mx-2 p-3">
@@ -16,7 +16,7 @@
 
     <div *ngIf="divTurnos" class="col border border-dark mx-2 p-3">
         <h4>Turnos con {{ especialistaSeleccionado.nombre }} {{ especialistaSeleccionado.apellido }}:</h4>
-        <button *ngFor="let turno of turnosAMostrar" class="btn btn-warning m-2 roll-in-left" (click)="verTurno(turno)">
+        <button *ngFor="let turno of turnosAMostrar" appColorButton [texto]="turno.fecha" class="m-2 roll-in-left" (click)="verTurno(turno)">
             {{ turno.fecha | date:'dd/MM HH:mm' }}
         </button>
     </div>

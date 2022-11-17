@@ -223,10 +223,12 @@
       (click)="mostrarTurnosPorEspecialista(especialista)">{{ especialista }}</button>
   </div>
 
-  <table *ngIf="mostrarTabla" class="table w-75">
+  <table *ngIf="mostrarTabla" class="table">
     <thead>
       <tr>
         <th scope="col">Fecha</th>
+        <th scope="col">Día de la semana</th>
+        <th scope="col">Mes</th>
         <th scope="col">Especialidad</th>
         <th scope="col">Especialista</th>
         <th scope="col">Estado</th>
@@ -234,42 +236,52 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let turno of turnosReservadosAMostrar">
+      <tr *ngFor="let turno of turnosReservadosAMostrar" resaltador>
         <td>{{ turno.fecha | date:'short' }}</td>
+        <td>{{ turno.fecha | diaEnEspaniol }}</td>
+        <td>{{ turno.fecha | mesEnEspaniol }}</td>
         <td>{{ turno.especialidad }}</td>
         <td>{{ turno.nombreEspecialista }}</td>
         <td><strong>Reservado</strong></td>
         <td><button class="btn btn-danger" (click)="editarDivModal(turno,'turnos_reservados')">Cancelar</button></td>
       </tr>
 
-      <tr *ngFor="let turno of turnosAceptadosAMostrar">
+      <tr *ngFor="let turno of turnosAceptadosAMostrar" resaltador>
         <td>{{ turno.fecha | date:'short' }}</td>
+        <td>{{ turno.fecha | diaEnEspaniol }}</td>
+        <td>{{ turno.fecha | mesEnEspaniol }}</td>
         <td>{{ turno.especialidad }}</td>
         <td>{{ turno.nombreEspecialista }}</td>
         <td><strong>Aceptado</strong></td>
         <td><button class="btn btn-danger" (click)="editarDivModal(turno,'turnos_aceptados')">Cancelar</button></td>
       </tr>
 
-      <tr *ngFor="let turno of turnosRechazadosAMostrar">
+      <tr *ngFor="let turno of turnosRechazadosAMostrar" resaltador>
         <td>{{ turno.fecha | date:'short' }}</td>
+        <td>{{ turno.fecha | diaEnEspaniol }}</td>
+        <td>{{ turno.fecha | mesEnEspaniol }}</td>
         <td>{{ turno.especialidad }}</td>
         <td>{{ turno.nombreEspecialista }}</td>
         <td><strong>Rechazado</strong></td>
         <td><button class="btn btn-success" (click)="verResenia('turnos_rechazados',turno)">Ver reseña</button></td>
       </tr>
 
-      <tr *ngFor="let turno of turnosCanceladosAMostrar">
+      <tr *ngFor="let turno of turnosCanceladosAMostrar" resaltador>
         <td>{{ turno.fecha | date:'short' }}</td>
+        <td>{{ turno.fecha | diaEnEspaniol }}</td>
+        <td>{{ turno.fecha | mesEnEspaniol }}</td>
         <td>{{ turno.especialidad }}</td>
         <td>{{ turno.nombreEspecialista }}</td>
         <td><strong>Cancelado</strong></td>
         <td><button class="btn btn-success" (click)="verResenia('turnos_cancelados',turno)">Ver reseña</button></td>
       </tr>
 
-      <tr *ngFor="let turno of turnosFinalizadosAMostrar">
+      <tr *ngFor="let turno of turnosFinalizadosAMostrar" resaltador>
         <td>{{ turno.fecha | date:'short' }}</td>
+        <td>{{ turno.fecha | diaEnEspaniol }}</td>
+        <td>{{ turno.fecha | mesEnEspaniol }}</td>
         <td>{{ turno.especialidad }}</td>
-        <td>{{ turno.nombreEspecialista }}</td>
+        <td appResaltar>{{ turno.nombreEspecialista }}</td>
         <td><strong>Finalizado</strong></td>
         <td>
           <button class="btn btn-success btn-sm" (click)="verResenia('diagnostico_turnos',turno)">Ver reseña</button>

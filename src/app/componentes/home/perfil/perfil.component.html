@@ -1,4 +1,5 @@
 <div class="row-md-9 w-75 mx-auto">
+    <h3 asistenteDeVoz>Aquí puede ver su perfil.</h3>
     <div class="row g-3">
         <div class="col-md-4">
             <label for="nombre" class="form-label">Nombre</label>
@@ -39,9 +40,15 @@
             <br>
             <img [src]="urlImagenDos" alt="Imagen de perfil dos">
         </div>
+
+        <div *ngIf="arrayEspecialistas.length > 0" class="border border-dark">
+            <h4>Buscar turno por especialistas</h4>
+            <button *ngFor="let esp of arrayEspecialistas" class="btn btn-warning m-2" (click)="seleccionarEspecialista(esp)">{{ esp }}</button>
+        </div>
         
         <div *ngIf="mostrarHistoria" class="border border-dark mx-auto">
-            <app-historia-clinica [id_paciente]="uidUsuario"></app-historia-clinica>
+            <h3 asistenteDeVoz>Aquí puede ver el historial.</h3>
+            <app-historia-clinica [datos]="datosAEnviar"></app-historia-clinica>
         </div>
 
     </div>
